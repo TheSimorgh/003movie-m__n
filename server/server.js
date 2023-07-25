@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const connectDB = require("./src/config/database");
 mongoose.set("strictQuery", true);
 const routes =require("./src/routes/index");
+const { errorHandler } = require("./src/midd/error");
 const app = express();
 // const http = require("http");
 // const { readdirSync } = require("fs");
@@ -38,6 +39,7 @@ app.use(cors());
 // readdirSync("./routes").map((r)=>app.use("/",require("./routes/"+r)))
 // readdirSync("./src/routes/").map((r)=>app.use(`/api/v1/${r}/`,require("./src/routes/"+r)))
 app.use("/api/", routes);
+app.use(errorHandler)
 
 ;(async function server() {
     try {
