@@ -1,0 +1,5 @@
+npm i axios react-router-dom react-drag-drop-files react-icons 
+tailwind 
+
+
+npm i bcrypt cloudinary mongoose morgan nodemailer multer jsonwebtoken cors dotenv express express-async-errors express-validator
