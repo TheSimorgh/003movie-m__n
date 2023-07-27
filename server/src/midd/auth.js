@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { sendError } = require("../utils/helper");
+const { sendError } = require("../utils/helpers");
 const User = require("../models/user");
 
 exports.isAuth = async (req, res, next) => {
@@ -9,7 +9,7 @@ exports.isAuth = async (req, res, next) => {
   const jwtToken = token.split("Bearer ")[1];
 
   if (!jwtToken) return sendError(res, "Invalid token!");
-  const decode = jwt.verify(jwtToken, process.env.JWT_SECRET);
+  const decode = jwt.verify(jwtToken, process.env.TOKEN_SECRET);
   const { userId } = decode;
 
   const user = await User.findById(userId);

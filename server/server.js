@@ -6,14 +6,16 @@ const mongoose = require("mongoose");
 const connectDB = require("./src/config/database");
 mongoose.set("strictQuery", true);
 const routes =require("./src/routes/index");
-const { errorHandler } = require("./src/midd/error");
+const { handleNotFound } = require("./src/utils/helpers");
+const {errorHandler} =require("./src/midd/error")
+
 const app = express();
 // const http = require("http");
 // const { readdirSync } = require("fs");
 // sendEmail("kainorling","11")
 // sendResetCode("kainorling","sss","dsdsds")
 //middlewares
-app.use(express.json()); //Pass incoming data
+
 // app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -38,12 +40,15 @@ app.use(cors());
 // app.get("/",(req,res)=>{res.send("XXXXXXX")})
 // readdirSync("./routes").map((r)=>app.use("/",require("./routes/"+r)))
 // readdirSync("./src/routes/").map((r)=>app.use(`/api/v1/${r}/`,require("./src/routes/"+r)))
+// app.use(morgan("dev"));
 app.use("/api/", routes);
+app.use("/*",handleNotFound)
 app.use(errorHandler)
+
 
 ;(async function server() {
     try {
-        const PORT = process.env.PORT || 9080;  
+        const PORT = process.env.PORT || 9000;  
       connectDB()
     //   server.listen(PORT, console.log(`Server is running on port ${PORT}`));  
     app.listen(process.env.PORT,()=>{ console.log(`Server is Running ${process.env.PORT}`);})
