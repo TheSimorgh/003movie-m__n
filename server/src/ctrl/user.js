@@ -2,6 +2,9 @@ const { isValidObjectId } = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { sendError, generateRandomByte } = require("../utils/helpers");
+const PasswordResetToken = require("../models/passwordResetToken");
+
+
 const EmailVerificationToken = require("../models/emailVerificationToken");
 // const { generateMailTransporter, genereateOPT } = require("../utils/mail");
 // const { mailingCode } = require("../utils/mailer");
@@ -65,6 +68,7 @@ exports.login = async (req, res) => {
   const jwtToken = jwt.sign({ userId: _id }, process.env.TOKEN_SECRET);
   res.json({
     user: { id: _id, name, email, role, token: jwtToken, isVerified },
+    
   });
 };
 
@@ -113,25 +117,15 @@ exports.resend_email_verfication_token = async (req, res) => {
   const alreadyHasToken = await EmailVerificationToken.findOne({
     owner: userId,
   });
-  if (alreadyHasToken)
-    return sendError(
-      res,
-      "Only after one hour you can request for another token!"
-    );
-
+  if (alreadyHasToken) return sendError( res, "Only after one hour you can request for another token!");
   //generate 6 digit otp
   //let OTP = genereateOPT();
   let OTP = 123456;
   // store otp inside our db
-  const newEmailVerificationToken = new EmailVerificationToken({
-    owner: user._id,
-    token: OTP,
-  });
+  const newEmailVerificationToken = new EmailVerificationToken({owner: user._id,token: OTP,});
   await newEmailVerificationToken.save();
   // // send that otp to our user
-
   // var transport = generateMailTransporter();
-
   // transport.sendMail({
   //   from: "verification@reviewapp.com",
   //   to: user.email,
@@ -142,10 +136,11 @@ exports.resend_email_verfication_token = async (req, res) => {
   //   `,
   // });
   res.json({
-    message: "New OTP has been sent to your registered email accout.",
+    message: "New OTP has been sent to your registered email account.",
     OTP,
   });
 };
+
 
 exports.forgot_password = async (req, res) => {
   const { email } = req.body;
@@ -176,7 +171,7 @@ exports.forgot_password = async (req, res) => {
   //   `,
   // });
 
-  res.json({ message: "Link sent to your email!", resetPasswordUrl });
+  res.json({ message: "Link sent to your email!", resetPasswordUrl,token,user });
 };
 
 exports.send_reset_pass_token_status = async (req, res) => {
@@ -188,19 +183,11 @@ exports.reset_password = async (req, res) => {
 
   const user = await User.findById(userId);
   const matched = await user.comparePassword(newPassword);
-  if (matched)
-    return sendError(
-      res,
-      "The new password must be different from the old one!"
-    );
-
+  if (matched) return sendError( res, "The new password must be different from the old one!"  );
   user.password = newPassword;
   await user.save();
-
   await PasswordResetToken.findByIdAndDelete(req.resetToken._id);
-
   // const transport = generateMailTransporter();
-
   // transport.sendMail({
   //   from: "security@reviewapp.com",
   //   to: user.email,
@@ -208,13 +195,9 @@ exports.reset_password = async (req, res) => {
   //   html: `
   //     <h1>Password Reset Successfully</h1>
   //     <p>Now you can use new password.</p>
-
   //   `,
   // });
-
-  res.json({
-    message: "Password reset successfully, now you can use new password.",
-  });
+  res.json({message: "Password reset successfully, now you can use new password.", });
 };
 exports.me = async (req, res) => {
   const { user } = req;

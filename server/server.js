@@ -1,3 +1,4 @@
+require("express-async-errors");
 const dotenv = require("dotenv");
 const cors = require("cors");
 dotenv.config();
@@ -43,6 +44,7 @@ app.use(cors());
 // app.use(morgan("dev"));
 app.use("/api/", routes);
 app.use("/*",handleNotFound)
+//handling async await error in ordeer to hanlde need install pacakge called 
 app.use(errorHandler)
 
 

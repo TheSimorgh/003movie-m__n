@@ -1,3 +1,6 @@
+const crypto =require("crypto")
+
+
 exports.generateRandomByte = () => {
   return new Promise((resolve, reject) => {
     crypto.randomBytes(30, (err, buff) => {
@@ -8,6 +11,7 @@ exports.generateRandomByte = () => {
     });
   });
 };
+
 
 
 exports.sendError = (res, error, statusCode = 401) =>
