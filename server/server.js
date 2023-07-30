@@ -44,7 +44,7 @@ app.use(cors());
 // app.use(morgan("dev"));
 app.use("/api/", routes);
 app.use("/*",handleNotFound)
-//handling async await error in ordeer to hanlde need install pacakge called 
+//handling async await error in ordeer to hanlde need install pacakge called require("express-async-errors"); after this no need to wra 
 app.use(errorHandler)
 
 

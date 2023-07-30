@@ -3,3 +3,21 @@ tailwind
 
 
 npm i bcrypt cloudinary mongoose morgan nodemailer multer jsonwebtoken cors dotenv express express-async-errors express-validator
+npm install --save-dev nodemon   
+
+sudo service mongod restart
+
+https://mailtrap.io/
+https://temp-mail.org/en/
+
+
+https://help.warmupinbox.com/en/articles/5445728-google-error-535-5-7-8-username-and-password-not-accepted
+
+
+
+
+npm install -D tailwindcss
+npx tailwindcss init -p
+npm install postcss@latest
+
+npm install -D tailwindcss postcss@latest autoprefixer 
