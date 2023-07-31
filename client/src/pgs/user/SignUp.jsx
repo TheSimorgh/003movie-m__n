@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FormContainer, FormInput, Submit_Btn, Title,Container, CustomLink } from "../cmps";
+import { FormContainer, FormInput, Submit_Btn, Title,Container, CustomLink } from "../../cmps";
 const SignUp = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",

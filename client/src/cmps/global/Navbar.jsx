@@ -4,9 +4,11 @@ import Container from "./Container";
 import { BsFillSunFill } from "react-icons/bs";
 import { useState } from "react";
 import NavSearchForm from "../form/NavSearchForm";
+import { useTheme } from "../../hooks/useTheme";
 const Navbar = () => {
 
 const [isLoggedIn,setIsLoggedIn]=useState(false)
+const {toggleTheme}=useTheme()
  const handleLogout=()=>{
   setIsLoggedIn(prev=>!prev)
  }
@@ -29,7 +31,7 @@ const [isLoggedIn,setIsLoggedIn]=useState(false)
           <ul className="flex items-center sm:space-x-4 space-x-2">
           <li>
               <button
-                onClick={()=>{}}
+                onClick={()=>toggleTheme()}
                 className="dark:bg-white bg-dark-subtle p-1 rounded sm:text-2xl text-lg"
               >
                 <BsFillSunFill className="text-secondary" size={24} />

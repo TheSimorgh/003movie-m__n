@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
-import { Container, FormContainer, Submit_Btn, Title } from "../cmps";
+import { Container, FormContainer, Submit_Btn, Title } from "../../cmps";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 

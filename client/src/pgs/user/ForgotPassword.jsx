@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { Container, CustomLink, FormContainer, FormInput, Submit_Btn, Title } from "../cmps";
+import { Container, CustomLink, FormContainer, FormInput, Submit_Btn, Title } from "../../cmps";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
