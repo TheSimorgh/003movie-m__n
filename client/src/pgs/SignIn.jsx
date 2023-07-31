@@ -37,7 +37,7 @@ const SignIn = () => {
         <Submit_Btn value="Sign in"  />
 
         <div className="flex justify-between">
-          <CustomLink to="/auth/forget-password">Forget password</CustomLink>
+          <CustomLink to="/auth/forgot-password">Forget password</CustomLink>
           <CustomLink to="/auth/signup">Sign up</CustomLink>
         </div>
       </form>

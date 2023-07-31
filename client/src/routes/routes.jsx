@@ -1,4 +1,4 @@
-import { ConfirmPassword, EmailVerification, ForgetPassword, Home, MovieReviews, NotFound, SearchMovies, SignIn, SignUp, SingleMovie } from "../pgs";
+import { ConfirmPassword, EmailVerification, ForgotPassword, Home, MovieReviews, NotFound, SearchMovies, SignIn, SignUp, SingleMovie } from "../pgs";
 
 const routes = [
   {
@@ -25,7 +25,7 @@ const routes = [
   },
     {
     path: "/auth/forgot-password",
-    element: <ForgetPassword />,
+    element: <ForgotPassword />,
     state:"forgot password"
   },
     {

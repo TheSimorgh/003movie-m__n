@@ -1,7 +1,7 @@
 export {default as Home} from "./Home";
 export {default as SignIn} from "./SignIn";
 export {default as SignUp} from "./SignUp";
-export {default as ForgetPassword} from "./ForgetPassword";
+export {default as ForgotPassword} from "./ForgotPassword";
 export {default as ConfirmPassword} from "./ConfirmPassword";
 export {default as EmailVerification} from "./EmailVerification";
 export {default as SearchMovies} from "./SearchMovies";

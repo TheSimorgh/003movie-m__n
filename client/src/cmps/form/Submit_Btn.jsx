@@ -4,7 +4,9 @@ import { ImSpinner3 } from "react-icons/im";
 
 const Submit_Btn = ({type,onClick,value}) => {
   return (
-    <button type={type || "submit"} onClick={onClick} >
+    <button type={type || "submit"} onClick={onClick}
+    className="w-full rounded mt-3 dark:bg-white bg-secondary dark:text-secondary text-white hover:bg-opacity-90 transition font-semibold text-lg cursor-pointer h-10 flex items-center justify-center"
+    >
       {value}
     </button>
   )
