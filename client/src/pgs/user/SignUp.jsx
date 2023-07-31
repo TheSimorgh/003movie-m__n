@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FormContainer, FormInput, Submit_Btn, Title,Container, CustomLink } from "../../cmps";
 import { commonModalClasses } from "../../utils/theme";
 import { isValidEmail } from "../../utils/helper";
+import { register_user } from "../../api/auth";
 const SignUp = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -33,6 +34,12 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
+    const response=await register_user(userInfo)
+    if (response.error) return console.log(response.error);
+    navigate("/auth/verification", {
+      state: { user: response.user },
+      replace: true,
+    });
   };
   const { name, email, password } = userInfo;
   return (

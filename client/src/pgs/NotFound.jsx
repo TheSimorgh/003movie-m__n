@@ -2,7 +2,7 @@
 
 const NotFound = () => {
   return (
-    <div>
+    <div className="pt-40 text-center dark:text-primary text-white ">
       404 PAGE Not Found
     </div>
   )

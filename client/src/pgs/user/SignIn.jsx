@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FormContainer, FormInput, Submit_Btn, Title,Container, CustomLink } from "../../cmps";
 import { commonModalClasses } from "../../utils/theme";
 import { isValidEmail } from "../../utils/helper";
+import { register_user } from "../../api/auth";
 
 const SignIn = () => {
   const [userInfo, setUserInfo] = useState({
@@ -28,6 +29,7 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
+
   }
   return (
     <FormContainer>

@@ -20,6 +20,10 @@ const isValidOTP = (otp) => {
 const EmailVerification = () => {
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
+  const inputRef = useRef();
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const user = state?.user;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +51,7 @@ const EmailVerification = () => {
     console.log(activeOtpIndex);
   };
 
-  const inputRef = useRef();
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOtpIndex]);
@@ -61,6 +65,10 @@ const EmailVerification = () => {
  
   };
 console.log(inputRef.current?.value);
+useEffect(() => {
+  if (!user) navigate("/not-found");
+}, [user, ]);
+
   return (
     <FormContainer>
       <Container>
