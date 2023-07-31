@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { Container, CustomLink, FormContainer, FormInput, Submit_Btn, Title } from "../../cmps";
+import { commonModalClasses } from "../../utils/theme";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ const ForgetPassword = () => {
   return (
     <FormContainer>
       <Container>
-        <form>
+        <form  className={commonModalClasses + " w-96"}>
         <Title>Please Enter Your Email</Title>
         <FormInput
             onChange={handleChange}
