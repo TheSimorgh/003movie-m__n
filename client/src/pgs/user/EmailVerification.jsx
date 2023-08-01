@@ -30,6 +30,9 @@ const EmailVerification = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isValidOTP(otp)) {
+      return updateNotification("error", "invalid OTP");
+    }
     const {error,message,user:userResponse}=await verify_user_email({OTP:otp.join(""),userId:user.id})
     if (error) return updateNotification("error", error);
 
