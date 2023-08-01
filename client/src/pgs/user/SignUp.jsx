@@ -5,6 +5,7 @@ import { FormContainer, FormInput, Submit_Btn, Title,Container, CustomLink } fro
 import { commonModalClasses } from "../../utils/theme";
 import { isValidEmail } from "../../utils/helper";
 import { register_user } from "../../api/auth";
+import { useNotification } from "../../hooks";
 const SignUp = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -12,6 +13,7 @@ const SignUp = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const {updateNotification}=useNotification()
   const validateUserInfo = ({ name, email, password }) => {
     const isValidName = /^[a-z A-Z]+$/;
   
@@ -34,8 +36,11 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
+
+    if (!ok) return updateNotification("error", error);
     const response=await register_user(userInfo)
     if (response.error) return console.log(response.error);
+    
     navigate("/auth/verification", {
       state: { user: response.user },
       replace: true,

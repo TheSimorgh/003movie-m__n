@@ -3,6 +3,8 @@
 import { Container, FormContainer, Submit_Btn, Title } from "../../cmps";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { verify_user_email } from "../../api/auth";
+import { useNotification } from "../../hooks";
 
 const OTP_LENGTH = 6;
 let currentOTPIndex;
@@ -22,11 +24,17 @@ const EmailVerification = () => {
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const inputRef = useRef();
   const navigate = useNavigate();
+  const {updateNotification}=useNotification()
   const { state } = useLocation();
   const user = state?.user;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const {error,message,user:userResponse}=await verify_user_email({OTP:otp.join(""),userId:user.id})
+    if (error) return updateNotification("error", error);
+
+    updateNotification("success", message);
+ 
   };
   const focusNextInputField = (index) => {
     setActiveOtpIndex(index + 1);
@@ -89,7 +97,7 @@ useEffect(() => {
                   type="number"
                   value={otp[index] || ""}
                   onChange={(e)=>handleOptChange(e,index)}
-                  // onKeyDown={(e) => handleKeyDown(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   className="w-12 h-12 border-2 dark:border-dark-subtle   border-light-subtle darK:focus:border-white focus:border-primary rounded bg-transparent outline-none text-center dark:text-white text-primary font-semibold text-xl spin-button-none active:border-blue-600"
                 />
               );

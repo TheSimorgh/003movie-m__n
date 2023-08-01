@@ -4,7 +4,7 @@ import Container from "./Container";
 import { BsFillSunFill } from "react-icons/bs";
 import { useState } from "react";
 import NavSearchForm from "../form/NavSearchForm";
-import { useTheme } from "../../hooks/useTheme";
+import { useTheme } from "../../hooks";
 const Navbar = () => {
 
 const [isLoggedIn,setIsLoggedIn]=useState(false)
