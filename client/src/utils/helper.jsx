@@ -4,3 +4,5 @@ export const isValidEmail = (email) => {
   
     return isValid.test(email);
   };
+
+  

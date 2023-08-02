@@ -4,14 +4,16 @@ import Container from "./Container";
 import { BsFillSunFill } from "react-icons/bs";
 import { useState } from "react";
 import NavSearchForm from "../form/NavSearchForm";
-import { useTheme } from "../../hooks";
+import { useAuth, useTheme } from "../../hooks";
 const Navbar = () => {
 
-const [isLoggedIn,setIsLoggedIn]=useState(false)
 const {toggleTheme}=useTheme()
- const handleLogout=()=>{
-  setIsLoggedIn(prev=>!prev)
- }
+const { authInfo, handleLogout } = useAuth();
+const { isLoggedIn } = authInfo;
+//const[isLoggedIn,setisLoggedIn]=useState(false)
+//  const handleLogout=()=>{
+//   setIsLoggedIn(prev=>!prev)
+//  }
  const handleSearchSubmit = () => {
   
 };

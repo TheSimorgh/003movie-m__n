@@ -39,7 +39,8 @@ const SignUp = () => {
 
     if (!ok) return updateNotification("error", error);
     const response=await register_user(userInfo)
-    if (response.error) return console.log(response.error);
+    if (response.error) return updateNotification("error", response.error);
+
     
     navigate("/auth/verification", {
       state: { user: response.user },

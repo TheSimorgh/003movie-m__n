@@ -12,7 +12,7 @@ import {
 import { commonModalClasses } from "../../utils/theme";
 import { isValidEmail } from "../../utils/helper";
 import { login_user } from "../../api/auth";
-import { useNotification } from "../../hooks";
+import { useAuth, useNotification } from "../../hooks";
 
 const SignIn = () => {
   const [userInfo, setUserInfo] = useState({
@@ -21,6 +21,9 @@ const SignIn = () => {
   });
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
+  const { handleLogin, authInfo } = useAuth();
+  const { isPending, isLoggedIn } = authInfo;
+
   const validateUserInfo = ({ email, password }) => {
     if (!email.trim()) return { ok: false, error: "Email is missing!" };
     if (!isValidEmail(email)) return { ok: false, error: "Invalid email!" };
@@ -39,6 +42,8 @@ const SignIn = () => {
     const { ok, error } = validateUserInfo(userInfo);
     console.log(userInfo);
     if (!ok) return updateNotification("error", error);
+    handleLogin(userInfo.email, userInfo.password);
+  
   };
   return (
     <FormContainer>
@@ -60,7 +65,7 @@ const SignIn = () => {
             name="password"
             type="password"
           />
-          <Submit_Btn value="Sign in" />
+          <Submit_Btn value="Sign in" busy={isPending}/>
 
           <div className="flex justify-between">
             <CustomLink to="/auth/forgot-password">Forget password</CustomLink>

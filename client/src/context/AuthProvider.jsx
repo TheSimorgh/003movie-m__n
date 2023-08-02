@@ -47,10 +47,7 @@ export default function AuthProvider({ children }) {
     if (!token) return;
     setAuthInfo({ ...authInfo, isPending: true });
     const { error, user } = await get_is_auth(token);
-    if (error) {
-      updateNotification("error", error);
-      return setAuthInfo({ ...authInfo, isPending: false, error });
-    }
+    if (error) {updateNotification("error", error);return setAuthInfo({ ...authInfo, isPending: false, error })}
 
     setAuthInfo({
       profile: { ...user },
