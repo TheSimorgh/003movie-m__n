@@ -15,3 +15,5 @@ export {default as FormInput} from "./form/FormInput";
 export {default as CustomBtnLink} from "./global/CustomBtnLink";
 export {default as CustomLink} from "./global/CustomLink";
 export {default as Container} from "./global/Container";
+export {default as NotVerified} from "./user/NotVerified";
+

@@ -3,7 +3,7 @@
 import { Container, FormContainer, Submit_Btn, Title } from "../../cmps";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { verify_user_email } from "../../api/auth";
+import { resend_email_verification_token, verify_user_email } from "../../api/auth";
 import { useAuth, useNotification } from "../../hooks";
 import { commonModalClasses } from "../../utils/theme";
 
@@ -48,7 +48,7 @@ const EmailVerification = () => {
   const user = state?.user;
   const ser_otp = state?.otp;
   const url = state?.url;
-
+  console.log(state.user);
   const navigate = useNavigate();
 
   const focusNextInputField = (index) => {
@@ -104,6 +104,13 @@ const EmailVerification = () => {
     isAuth();
   };
 
+  const handleOTPResend = async () => {
+    const { error, message } = await resend_email_verification_token(user.id);
+
+    if (error) return updateNotification("error", error);
+
+    updateNotification("success", message);
+  };
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOtpIndex]);
@@ -143,7 +150,13 @@ const EmailVerification = () => {
           </div>
           <div>
             <Submit_Btn value="Verify Account" />
-
+            <button
+              onClick={handleOTPResend}
+              type="button"
+              className="dark:text-white text-blue-500 font-semibold hover:underline mt-2"
+            >
+              I don't have OTP
+            </button>
           </div>
         </form>
       </Container>
