@@ -40,12 +40,15 @@ const SignUp = () => {
     if (!ok) return updateNotification("error", error);
     const response=await register_user(userInfo)
     if (response.error) return updateNotification("error", response.error);
+    console.log(response);
+    updateNotification("success", response);
 
-    
-    navigate("/auth/verification", {
-      state: { user: response.user },
-      replace: true,
-    });
+    setTimeout(()=>{
+      navigate("/auth/verification", {
+        state: { user: response.user },
+        replace: true,
+      });
+    },1500)
   };
   const { name, email, password } = userInfo;
   return (

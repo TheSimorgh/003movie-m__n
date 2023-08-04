@@ -28,6 +28,7 @@ const routes = [
     element: <ForgotPassword />,
     state:"forgot password"
   },
+
     {
     path: "/auth/reset-password",
     element: <ConfirmPassword />,

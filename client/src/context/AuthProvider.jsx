@@ -60,10 +60,13 @@ export default function AuthProvider({ children }) {
     isAuth();
   }, []);
   return (
-    <AuthContext.AuthProvider
+    <AuthContext.Provider
       value={{ authInfo, handleLogin, handleLogout, isAuth }}
     >
       {children}
-    </AuthContext.AuthProvider>
+    </AuthContext.Provider>
   );
 }
+
+
+  

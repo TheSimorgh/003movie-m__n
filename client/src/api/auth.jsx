@@ -4,6 +4,7 @@ import client from "./client";
 export const register_user = async (userInfo) => {
   try {
     const { data } = await client.post("/user/register", userInfo);
+    return data
   } catch (error) {
     const { response } = error;
     if (response?.data) return response.data;
@@ -57,7 +58,9 @@ export const get_is_auth = async (token) => {
 export const forgot_password = async (email) => {
   try {
     const { data } = await client.post("/user/forgot-password", { email });
+    console.log(data)
     return data;
+
   } catch (error) {
     const { response } = error;
     if (response?.data) return response.data;

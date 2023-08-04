@@ -6,13 +6,15 @@ import { BrowserRouter } from "react-router-dom";
 import AllContextProvider from "./context/index.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <AllContextProvider>
   <BrowserRouter>
+  <AllContextProvider>
+
 
       <React.StrictMode>
         <App />
       </React.StrictMode>
 
-  </BrowserRouter>
+
   </AllContextProvider>
+  </BrowserRouter>
 );

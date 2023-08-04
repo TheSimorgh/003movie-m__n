@@ -9,7 +9,9 @@ const AllContextProvider = ({ children }) => {
     <NotificationProvider>
       <AuthProvider>
       <ThemeProvider>{children}</ThemeProvider>
+
       </AuthProvider>
+
     </NotificationProvider>
   
   )
