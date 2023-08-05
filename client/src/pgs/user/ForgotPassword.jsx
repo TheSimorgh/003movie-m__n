@@ -22,7 +22,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     if (!isValidEmail(email))return updateNotification("error", "Invalid email!");
     const {error,message,info}=await forgot_password(email)
-    // const {url,user,token}=info
+    const {url,user,token}=info
     if (error) return updateNotification("error", error);
      setTest(url)
     updateNotification("success", message);
