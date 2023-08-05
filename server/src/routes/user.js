@@ -11,9 +11,9 @@ router.post("/register",validate_register, register );
 router.post("/login", validate_login, login);
 router.post("/verify-email", verify_email);
 router.post("/resend-email-verification-token", resend_email_verfication_token);
-router.get("/forgot-password",forgot_password );
-router.get("/verify-pass-reset-token", isValidPassResetToken, send_reset_pass_token_status);
-router.get("/reset-password",validate_password, isValidPassResetToken,reset_password );
+router.post("/forgot-password",forgot_password );
+router.post("/verify-pass-reset-token", isValidPassResetToken, send_reset_pass_token_status);
+router.post("/reset-password",validate_password, isValidPassResetToken,reset_password );
 router.get("/me", isAuth, me );
 
 

@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
     token: OTP,
   });
   await newEmailVerificationToken.save();
-  // const url =`${process.env.BASE_URL}/code/${newEmailVerificationToken}`
+  const url =`${process.env.BASE_URL}/code/${OTP}`
 
   // send that otp to our user
 
@@ -52,9 +52,11 @@ exports.register = async (req, res) => {
       id: newUser._id,
       name: newUser.name,
       email: newUser.email,
+      url:url,
+      otp:OTP
     },
-    EmToken:EmailVerificationToken,
-    OTP,
+    // url:{EmailVerificationToken},
+    // OTP:{OTP},
   });
 };
 
@@ -157,8 +159,9 @@ exports.forgot_password = async (req, res) => {
     token,
   });
   await newPasswordResetToken.save();
+  // const resetPasswordUrl = `http://localhost:5173/user/reset-password?token=${token}&id=${user._id}`;
 
-  const resetPasswordUrl = `http://localhost:5173/user/reset-password?token=${token}&id=${user._id}`;
+  const resetPasswordUrl = `?token=${token}&id=${user._id}`;
 
   // const transport = generateMailTransporter();
   // transport.sendMail({
@@ -171,7 +174,9 @@ exports.forgot_password = async (req, res) => {
   //   `,
   // });
 
-  res.json({ message: "Link sent to your email!", resetPasswordUrl,token,user });
+  const info={url:resetPasswordUrl,token:token,user:user}
+  console.log(info);
+  res.json({ message: "Link sent to your email!", info});
 };
 
 exports.send_reset_pass_token_status = async (req, res) => {
