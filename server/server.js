@@ -38,12 +38,13 @@ app.use(cors());
 //? Start the server
 
 
-// app.get("/",(req,res)=>{res.send("XXXXXXX")})
+
 // readdirSync("./routes").map((r)=>app.use("/",require("./routes/"+r)))
 // readdirSync("./src/routes/").map((r)=>app.use(`/api/v1/${r}/`,require("./src/routes/"+r)))
 // app.use(morgan("dev"));
 app.use("/api/", routes);
-app.use("/*",handleNotFound)
+app.get("/",(req,res)=>{res.json({message:"hello"})})
+// app.use("/*",handleNotFound)
 //handling async await error in ordeer to hanlde need install pacakge called require("express-async-errors"); after this no need to wra 
 app.use(errorHandler)
 
