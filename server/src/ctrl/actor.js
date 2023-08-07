@@ -1,18 +1,22 @@
 const { isValidObjectId } = require("mongoose");
 const Actor = require("../models/actor");
-const { uploadImageToCloud, sendError, formatActor } = require("../utils/helpers");
-const cloudinary = require("../config/cloud");
+const {
+  uploadImageToCloud,
+  sendError,
+  formatActor,
+} = require("../utils/helpers");
+const cloud = require("../config/cloud");
 exports.all_actor = async (req, res) => {
-    const { pageNo, limit } = req.query;
+  const { pageNo, limit } = req.query;
 
-    const actors=await Actor.find()
-    // .sort({createdAt:-1})
-    // .skip(parseInt(pageNo)*parseInt(limit))
-    // .limit(parseInt(limit));
+  const actors = await Actor.find();
+  // .sort({createdAt:-1})
+  // .skip(parseInt(pageNo)*parseInt(limit))
+  // .limit(parseInt(limit));
 
-    res.json({
-        actors
-      });  
+  res.json({
+    actors,
+  });
 };
 
 exports.single_actor = async (req, res) => {
@@ -26,44 +30,49 @@ exports.single_actor = async (req, res) => {
 exports.create_actor = async (req, res) => {
   // console.log(req.body);
   // console.log(req.file);
-    // console.log( name, about, gender);
+  // console.log( name, about, gender);
   // console.log(file);
   const { name, about, gender } = req.body;
   const { file } = req;
 
   const newActor = new Actor({ name, about, gender });
-  if(file){
-    const {url,public_id}=await uploadImageToCloud(file.path)
+  if (file) {
+    const { url, public_id } = await uploadImageToCloud(file.path);
     newActor.avatar = { url, public_id };
-}
+  }
 
   await newActor.save();
   res.status(201).json({ actor: formatActor(newActor) });
-  };
-
-
-
+};
 
 exports.update_actor = async (req, res) => {
-  const {name,about,gender}=req.body;
-  const {file}=req;
-  const {actorId}=req.params;
-  if(!isValidObjectId(actorId)) return sendError(res,"Invalid request! ")
+  const { name, about, gender } = req.body;
+  const { file } = req;
+  const { actorId } = req.params;
+  if (!isValidObjectId(actorId)) return sendError(res, "Invalid request! ");
   const actor = await Actor.findById(actorId);
   if (!actor) return sendError(res, "Invalid request, record not found!");
   const public_id = actor?.avatar?.public_id;
-  if(public_id && file){
-    const {result}=await cloudinary.uploader.destroy(public_id)
-   if(result !==ok){ return sendError(res,"Could not remove image from cloud!"); }
+  if (public_id && file) {
+     const { result } = await cloud.uploader.destroy(public_id);
+    // const result = await cloud.uploader.destroy(public_id);
+
+    console.log(result);
+    if (!result ) {
+      return sendError(res, "Could not remove image from cloud!");
+    }
+    // if (!result !=="ok") {
+    //   return sendError(res, "Could not remove image from cloud!");
+    // }
   }
-  if(file){
-    const {url,public_id}=await uploadImageToCloud(file.path)
-    actor.avatar={ url, public_id };
+  if (file) {
+    const { url, public_id } = await uploadImageToCloud(file.path);
+    actor.avatar = { url, public_id };
   }
 
-  actor.name =name ? name : actor.name;
-  actor.about =about ? about  :actor.about;
-  actor.gender =gender ? gender : actor.gender;
+  actor.name = name ? name : actor.name;
+  actor.about = about ? about : actor.about;
+  actor.gender = gender ? gender : actor.gender;
 
   await actor.save();
   res.status(201).json({ actor: formatActor(actor) });
@@ -75,18 +84,17 @@ exports.delete_actor = async (req, res) => {
   const actor = await Actor.findById(actorId);
   if (!actor) return sendError(res, "Invalid request, record not found!");
   const public_id = actor.avatar?.public_id;
-    // remove old image if there was one!
-    if (public_id) {
-      const { result } = await cloudinary.uploader.destroy(public_id);
-      if (result !== "ok") {
-        return sendError(res, "Could not remove image from cloud!");
-      }
+  // remove old image if there was one!
+  if (public_id) {
+    const { result } = await cloud.uploader.destroy(public_id);
+    if (result !== "ok") {
+      return sendError(res, "Could not remove image from cloud!");
     }
+  }
 
-    await Actor.findByIdAndDelete(actorId);
+  await Actor.findByIdAndDelete(actorId);
 
-    res.json({ message: "Record removed successfully.",actor });
-
+  res.json({ message: "Record removed successfully.", actor });
 };
 
 exports.search_actor = async (req, res) => {
@@ -99,21 +107,21 @@ exports.search_actor = async (req, res) => {
 
   const actors = result.map((actor) => formatActor(actor));
   res.json({ results: actors });
-  };
-  
-  exports.latest_actors = async (req, res) => {
-    const result = await Actor.find().sort({ createdAt: "-1" }).limit(12);
+};
 
-    const actors = result.map((actor) => formatActor(actor));
-  
-    res.json(actors);
-  };
-  exports.test = async (req, res) => {
-    res.json({
-      message: 1,
-    });
-  };
-  
+exports.latest_actors = async (req, res) => {
+  const result = await Actor.find().sort({ createdAt: "-1" }).limit(12);
+
+  const actors = result.map((actor) => formatActor(actor));
+
+  res.json(actors);
+};
+exports.test = async (req, res) => {
+  res.json({
+    message: 1,
+  });
+};
+
 exports.test = async (req, res) => {
   console.log(req.body);
   res.json({
