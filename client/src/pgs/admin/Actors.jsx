@@ -1,9 +1,8 @@
 
-import React from 'react'
-
 const Actors = () => {
   return (
-    <div>Actors</div>
+    <div className="pt-[60px]">
+      Actors</div>
   )
 }
 

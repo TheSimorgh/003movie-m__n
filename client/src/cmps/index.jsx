@@ -1,4 +1,6 @@
 export {default as MainLayout} from "./global/MainLayout";
+export {default as MainLayoutAdmin} from "./global/MainLayoutAdmin";
+
 export {default as Navbar} from "./global/Navbar";
 
 

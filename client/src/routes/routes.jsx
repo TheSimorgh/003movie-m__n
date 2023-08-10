@@ -1,4 +1,5 @@
-import { ConfirmPassword, EmailVerification, ForgotPassword, Home, MovieReviews, NotFound, SearchMovies, SignIn, SignUp, SingleMovie } from "../pgs";
+/* eslint-disable no-unused-vars */
+import { Actors, ConfirmPassword, Dashboard, EmailVerification, ForgotPassword, Home, MovieReviews, Movies, NotFound, SearchMovies, SearchMoviesAdm, SignIn, SignUp, SingleMovie } from "../pgs";
 
 const routes = [
   {
@@ -57,6 +58,45 @@ const routes = [
 ];
 
 export default routes;
+
+export const admin_routes = [
+  {
+    //    // path: "/",
+    index: true,
+    element: <Dashboard />,
+    state: "dashboard",
+
+  },
+    {
+    path: "/movies",
+    element: <Movies />,
+    state:"movies"
+  },
+    {
+    path: "/actors",
+    element: <Actors />,
+    state:"actors"
+  },
+    {
+    path: "/search",
+    element: <SearchMoviesAdm />,
+    state:"search"
+  },
+    {
+    path: "*",
+    element: <NotFound />,
+    state:"not found"
+  },
+
+   
+];
+
+
+
+
+
+
+
 
 // const routes = [
 //   {

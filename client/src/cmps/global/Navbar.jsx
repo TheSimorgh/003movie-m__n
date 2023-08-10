@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Container from "./Container";
 import { BsFillSunFill } from "react-icons/bs";
 import { useState } from "react";
@@ -13,12 +13,13 @@ const Navbar = () => {
 const {toggleTheme}=useTheme()
 const { authInfo, handleLogout } = useAuth();
 const { isLoggedIn } = authInfo;
+const navigate = useNavigate();
 // const[isLoggedIn,setIsLoggedIn]=useState(false)
 //  const handleLogout=()=>{
 //   setIsLoggedIn(prev=>!prev)
 //  }
  const handleSearchSubmit = () => {
-  
+  console.log(authInfo,isLoggedIn);
 };
   return (
     <div className="bg-secondary shadow-sm shadow-gray-500 fixed w-full">
@@ -36,7 +37,7 @@ const { isLoggedIn } = authInfo;
           <ul className="flex items-center sm:space-x-4 space-x-2">
           <li>
               <button
-                onClick={()=>toggleTheme()}
+                onClick={toggleTheme}
                 className="dark:bg-white bg-dark-subtle p-1 rounded sm:text-2xl text-lg"
               >
                 <BsFillSunFill className="text-secondary" size={24} />

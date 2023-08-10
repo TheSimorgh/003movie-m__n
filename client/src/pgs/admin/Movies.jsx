@@ -1,8 +1,7 @@
-import React from 'react'
 
 const Movies = () => {
   return (
-    <div>Movies</div>
+    <div className="pt-[60px]" >Movies</div>
   )
 }
 

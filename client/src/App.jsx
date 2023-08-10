@@ -3,11 +3,20 @@ import MainRoute from "./routes/MainRoute";
 import { Routes, Route } from "react-router-dom";
 
 import routes from "./routes/routes";
-import { MainLayout } from "./cmps";
+import { MainLayout,  } from "./cmps";
+import { useAuth } from "./hooks";
+import MainRouteAdmin from "./routes/MainRouteAdmin";
 function App() {
+  const {authInfo}=useAuth();
+  const isAdmin=authInfo.profile?.role==="admin"
+  console.log(isAdmin)
+    console.log(authInfo);
+  // if(isAdmin) return <div>  <MainLayoutAdmin/> </div>
   return (
     <>
-      <MainRoute />
+  
+    {isAdmin ? <MainRouteAdmin/> : <MainRoute />}
+    {/* <MainRoute /> */}
 
     </>
   );
