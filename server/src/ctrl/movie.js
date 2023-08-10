@@ -9,14 +9,11 @@ exports.upload_trailer = async (req, res) => {
   const { file } = req;
   if (!file) return sendError(res, "Video file is missing!");
 
-  const data= await cloud.uploader.upload(
-    file.path,
-    {
-      resource_type: "video",
-    }
-  );
+  const data = await cloud.uploader.upload(file.path, {
+    resource_type: "video",
+  });
   // console.log(data);
-  const { secure_url: url, public_id } =data
+  const { secure_url: url, public_id } = data;
   res.status(201).json({ url, public_id });
 };
 
@@ -68,32 +65,28 @@ exports.create_movie = async (req, res) => {
   console.log(body);
   // const data= await cloud.uploader.upload(file.path,)
   // console.log(data);
-      // responsive_breakpoints:[ {
-      //   create_derived: true,
-      //   max_width: 640,
-      //   max_images: 3,
-      // }],
-      // let data;
-  if(file){
+  // responsive_breakpoints:[ {
+  //   create_derived: true,
+  //   max_width: 640,
+  //   max_images: 3,
+  // }],
+  // let data;
+  if (file) {
     const {
       secure_url: url,
       public_id,
       responsive_breakpoints,
-    } = await cloud.uploader.upload(
-      file.path,
-      {
-        transformation: {
-          width: 1280,
-          height: 720,
-        },
-        responsive_breakpoints: {
-          create_derived: true,
-          max_width: 640,
-          max_images: 3,
-        },
-      }
- 
-    );
+    } = await cloud.uploader.upload(file.path, {
+      transformation: {
+        width: 1280,
+        height: 720,
+      },
+      responsive_breakpoints: {
+        create_derived: true,
+        max_width: 640,
+        max_images: 3,
+      },
+    });
 
     const finalPoster = { url, public_id, responsive: [] };
 
@@ -119,18 +112,158 @@ exports.create_movie = async (req, res) => {
   });
 };
 
-
 exports.update_movie_without_poster = async (req, res) => {
-  console.log(req.body);
-  res.json({
-    message: 1,
-  });
+  const { movieId } = req.params;
+
+  if (!isValidObjectId(movieId)) return sendError(res, "Invalid Movie ID!");
+
+  const movie = await Movie.findById(movieId);
+  if (!movie) return sendError(res, "Movie Not Found!", 404);
+
+  const {
+    title,
+    storyLine,
+    director,
+    releseDate,
+    status,
+    type,
+    genres,
+    tags,
+    cast,
+    writers,
+    trailer,
+    language,
+  } = req.body;
+
+  movie.title = title;
+  movie.storyLine = storyLine;
+  movie.tags = tags;
+  movie.releseDate = releseDate;
+  movie.status = status;
+  movie.type = type;
+  movie.genres = genres;
+  movie.cast = cast;
+  movie.trailer = trailer;
+  movie.language = language;
+
+  if (director) {
+    if (!isValidObjectId(director))
+      return sendError(res, "Invalid director id!");
+    movie.director = director;
+  }
+
+  if (writers) {
+    for (let writerId of writers) {
+      if (!isValidObjectId(writerId))
+        return sendError(res, "Invalid writer id!");
+    }
+
+    movie.writers = writers;
+  }
+
+  await movie.save();
+
+  res.json({ message: "Movie is updated", movie });
 };
 
 exports.update_movie = async (req, res) => {
-  console.log(req.body);
+  const { movieId } = req.params;
+  const { file } = req;
+  if (!isValidObjectId(movieId)) return sendError(res, "Invalid Movie ID!");
+  const movie = await Movie.findById(movieId);
+  if (!movie) return sendError(res, "Movie Not Found!", 404);
+
+  const {
+    title,
+    storyLine,
+    director,
+    releseDate,
+    status,
+    type,
+    genres,
+    tags,
+    cast,
+    writers,
+    trailer,
+    language,
+  } = req.body;
+
+  movie.title = title ? title : movie.title;
+  movie.storyLine = storyLine ? title : movie.title;
+  movie.tags = tags ? tags : movie.tags;
+  movie.releseDate = releseDate ? releseDate : movie.releseDate;
+  movie.status = status ? status : movie.status;
+  movie.type = type ? type : movie.type;
+  movie.genres = genres ? genres : movie.genres;
+  movie.cast = cast ? cast : movie.cast;
+  movie.language = language ? language : movie.language;
+
+  if (director) {
+    if (!isValidObjectId(director))
+      return sendError(res, "Invalid director id!");
+    movie.director = director;
+  }
+
+  if (writers) {
+    for (let writerId of writers) {
+      if (!isValidObjectId(writerId))
+        return sendError(res, "Invalid writer id!");
+    }
+
+    movie.writers = writers;
+  }
+  // update poster
+  if (file) {
+    // removing poster from cloud if there is any.
+    const posterID = movie.poster?.public_id;
+    if (posterID) {
+      const { result } = await cloud.uploader.destroy(posterID);
+      if (result !== "ok") {
+        return sendError(res, "Could not update poster at the moment!");
+      }
+      // uploading poster
+      const {
+        secure_url: url,
+        public_id,
+        responsive_breakpoints,
+      } = await cloud.uploader.upload(req.file.path, {
+        transformation: {
+          width: 1280,
+          height: 720,
+        },
+        responsive_breakpoints: {
+          create_derived: true,
+          max_width: 640,
+          max_images: 3,
+        },
+      });
+
+      const finalPoster = { url, public_id, responsive: [] };
+
+      const { breakpoints } = responsive_breakpoints[0];
+      if (breakpoints.length) {
+        for (let imgObj of breakpoints) {
+          const { secure_url } = imgObj;
+          finalPoster.responsive.push(secure_url);
+        }
+      }
+
+      movie.poster = finalPoster;
+    }
+  }
+
+  await movie.save();
+
   res.json({
-    message: 1,
+    message: "Movie is updated",
+    movie: {
+      id: movie._id,
+      title: movie.title,
+      poster: movie.poster?.url,
+      genres: movie.genres,
+      status: movie.status,
+    },
+    updated_movie:movie
   });
 };
 exports.delete_movie = async (req, res) => {
@@ -140,9 +273,9 @@ exports.delete_movie = async (req, res) => {
   });
 };
 exports.get_movies = async (req, res) => {
-const movies =await Movie.find({})
+  const movies = await Movie.find({});
   res.json({
-    movies
+    movies,
   });
 };
 exports.get_movie_update = async (req, res) => {
@@ -193,10 +326,7 @@ exports.test = async (req, res) => {
   res.json({
     message: 1,
   });
-}
-
-
-
+};
 
 // DB has been connected
 
@@ -247,7 +377,6 @@ exports.test = async (req, res) => {
 //   responsive_breakpoints: [ { breakpoints: [Array] } ],
 //   api_key: '264797687512169'
 // }
-
 
 // console.log(responsive_breakpoints);
 // console.log(responsive_breakpoints.map(e=>console.log(e)));
