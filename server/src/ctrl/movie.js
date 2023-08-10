@@ -263,15 +263,40 @@ exports.update_movie = async (req, res) => {
       genres: movie.genres,
       status: movie.status,
     },
-    updated_movie:movie
+    updated_movie: movie,
   });
 };
 exports.delete_movie = async (req, res) => {
-  console.log(req.body);
-  res.json({
-    message: 1,
+  const { movieId } = req.params;
+
+  if (!isValidObjectId(movieId)) return sendError(res, "Invalid Movie ID!");
+
+  const movie = await Movie.findById(movieId);
+  if (!movie) return sendError(res, "Movie Not Found!", 404);
+
+  // check if there is poster or not.
+  // if yes then we need to remove that.
+
+  const posterId = movie.poster?.public_id;
+  if (posterId) {
+    const { result } = await cloud.uploader.destroy(posterId);
+    if (result !== "ok")
+      return sendError(res, "Could not remove poster from cloud!");
+  }
+
+  // removing trailer
+  const trailerId = movie.trailer?.public_id;
+  if (!trailerId) return sendError(res, "Could not find trailer in the cloud!");
+  const { result } = await cloud.uploader.destroy(trailerId, {
+    resource_type: "video",
   });
+  if (result !== "ok") return sendError(res, "Could not remove trailer from cloud!");
+
+  const del_movie=await Movie.findByIdAndDelete(movieId);
+
+  res.json({ message: "Movie removed successfully.",del_movie });
 };
+
 exports.get_movies = async (req, res) => {
   const movies = await Movie.find({});
   res.json({
