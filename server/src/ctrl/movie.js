@@ -298,10 +298,24 @@ exports.delete_movie = async (req, res) => {
 };
 
 exports.get_movies = async (req, res) => {
-  const movies = await Movie.find({});
-  res.json({
-    movies,
-  });
+  const { pageNo = 0, limit = 10 } = req.query;
+
+  const movies = await Movie.find({})
+    .sort({ createdAt: -1 })
+    .skip(parseInt(pageNo) * parseInt(limit))
+    .limit(parseInt(limit));
+
+ 
+  const results = movies.map((movie) => ({
+    id: movie._id,
+    title: movie.title,
+    poster: movie.poster?.url,
+    responsivePosters: movie.poster?.responsive,
+    genres: movie.genres,
+    status: movie.status,
+  }));
+
+  res.json({ movies: results });
 };
 exports.get_movie_update = async (req, res) => {
   console.log(req.body);
