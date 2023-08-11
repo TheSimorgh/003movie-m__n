@@ -8,7 +8,7 @@ const Dashboard = () => {
   // console.log(authInfo);
   // useEffect(()=>{isAuth()},[])
   return (
-    <div className="pt-[60px]">
+    <div className="pt-[60px] px-5 grid grid-cols-3 gap-5 p-5">
 Dashboard
       </div>
   )

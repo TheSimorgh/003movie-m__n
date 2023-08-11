@@ -50,6 +50,12 @@ const SignIn = () => {
      handleLogin(userInfo.email, userInfo.password);
   
   };
+
+
+  // useEffect(() => {
+  //   // we want to move our user to somewhere else
+  //   if (isLoggedIn) navigate("/");
+  // }, [isLoggedIn]);
   return (
     <FormContainer>
       <Container>

@@ -48,7 +48,7 @@ export default function AuthProvider({ children }) {
     setAuthInfo({ ...authInfo, isPending: true });
     const { error, user } = await get_is_auth(token);
     if (error) {updateNotification("error", error);return setAuthInfo({ ...authInfo, isPending: false, error })}
-
+    navigate("/",{replace:true})
     setAuthInfo({
       profile: { ...user },
       isLoggedIn: true,
