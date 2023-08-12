@@ -14,6 +14,8 @@ export {default as FormContainer} from "./form/FormContainer";
 export {default as Submit_Btn} from "./form/Submit_Btn";
 export {default as Title} from "./form/Title";
 export {default as FormInput} from "./form/FormInput";
+export {default as SearchFormAdm} from "./form/SearchFormAdm";
+
 
 
 export {default as CustomBtnLink} from "./global/CustomBtnLink";
