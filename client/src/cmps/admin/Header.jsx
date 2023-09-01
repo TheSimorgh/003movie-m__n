@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsFillSunFill } from "react-icons/bs";
 
-const Header = () => {
+const Header = ({ onAddActorClick, onAddMovieClick }) => {
   const [showOptions, setShowOptions] = useState(false);
   const { toggleTheme } = useTheme();
 
@@ -15,9 +15,10 @@ const Header = () => {
   const handleSearchSubmit = () => {};
 
   const options = [
-    { title: "Add Movie", onClick: "onAddMovieClick" },
-    { title: "Add Actor", onClick: "onAddActorClick" },
+    { title: "Add Movie", onClick: onAddMovieClick },
+    { title: "Add Actor", onClick: onAddActorClick },
   ];
+
   return (
     <div className=" flex items-center justify-between relative p-5">
       <SearchFormAdm
@@ -93,7 +94,7 @@ const CreateOptions = ({ options, visible, onClose }) => {
     className="absolute right-5 z-50 top-20 flex flex-col space-y-3 p-5 dark:bg-secondary bg-white drop-shadow-lg rounded animate-scale">
       {options.map((e) => (
         <Option key={e.title}
-        //  onClick={() => {}}
+        onClick={e.onClick}
          >
           {e.title}
         </Option>

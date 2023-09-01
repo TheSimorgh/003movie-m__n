@@ -1,10 +1,13 @@
 export {default as MainLayout} from "./global/MainLayout";
 export {default as MainLayoutAdmin} from "./global/MainLayoutAdmin";
 export {default as Logo} from "./global/Logo";
+export {default as  ModalContainer } from "./global/ModalContainer";
 
 export {default as Navbar} from "./global/Navbar";
 export {default as Header} from "./admin/Header";
 export {default as NavbarAdm} from "./admin/NavbarAdm";
+export {default as ActorCreateModal} from"./admin/modal/ActorCreateModal"
+export {default as MovieUploadModal} from"./admin/modal/MovieUploadModal"
 
 
 export {default as NavSearchForm} from "./form/NavSearchForm";
