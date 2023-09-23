@@ -1,78 +1,79 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 
+import { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import React, { useState } from "react";
+
+import ModalContainer from "../../global/ModalContainer";
 import { useNotification } from "../../../hooks";
 import { upload_trailer } from "../../../api/movie";
-import ModalContainer from "../../global/ModalContainer";
-
+import MovieForm from "../MovieForm";
 const MovieUploadModal = ({ visible, onClose }) => {
   const [videoSelected, setVideoSelected] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const { updateNotification } = useNotification();
   const [videoInfo, setVideoInfo] = useState({});
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [busy, setBusy] = useState(false);
 
-  const handleTypeError = (error) => {
-    updateNotification("error", error);
-  };
-  console.log(!videoSelected);
-
-  const handleUploadTrailer = async (data) => {
-    const { error, url, public_id } = await upload_trailer(data,setUploadProgress);
-    if (error) return updateNotification("error", error);
-    setVideoUploaded(true);
-    setVideoInfo({ url, public_id });
-  
-  };
+  const { updateNotification } = useNotification();
 
   const handleChange = (file) => {
     const formData = new FormData();
     formData.append("video", file);
-
     setVideoSelected(true);
     handleUploadTrailer(formData);
   };
 
-  const getUploadProgressValue=()=>{
-    if(!videoUploaded && uploadProgress >=100){
-      return "Processing"
-    }
-    return `Upload progress ${uploadProgress}`
-  }
+  const handleTypeError = (error) => {
+    updateNotification("error", error);
+  };
 
-  const handleSubmit=async(data)=>{
-    if (!videoInfo.url || !videoInfo.public_id)
-    return updateNotification("error", "Trailer is missing!");
+  const handleUploadTrailer = async (data) => {
+    const { error, url, public_id } = await upload_trailer(
+      data,
+      setUploadProgress
+    );
+    if (error) return updateNotification("error", error);
+
+    setVideoUploaded(true);
+    setVideoInfo({ url, public_id });
+  };
+
+  const getUploadProgressValue = () => {
+    if (!videoUploaded && uploadProgress >= 100) {
+      return "Processing";
+    }
+    return `Upload progress ${uploadProgress}%`;
+  };
+  const handleSubmit = async () => {
 
   }
   return (
-    <ModalContainer visible={visible}>
-      <div className="mb-5">
+    <ModalContainer visible={visible} onClose={onClose}>
+      {/* <div className="mb-5">
         <UploadProgress
-             visible={!videoUploaded && videoSelected}
-        width={uploadProgress} 
-        message={getUploadProgressValue()}
+          visible={!videoUploaded && videoSelected}
+          message={getUploadProgressValue()}
+          width={uploadProgress}
         />
       </div>
       <TrailerSelector
         visible={!videoSelected}
-        handleChange={handleChange}
         onTypeError={handleTypeError}
-      />
+        handleChange={handleChange}
+      /> */}
+      <MovieForm  busy={busy} onSubmit={!busy ? handleSubmit : null}/>
     </ModalContainer>
   );
 };
-
 export default MovieUploadModal;
 
 const TrailerSelector = ({ visible, handleChange, onTypeError }) => {
   if (!visible) return null;
 
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="h-full  flex items-center justify-center">
       <FileUploader
         handleChange={handleChange}
         onTypeError={onTypeError}
@@ -86,6 +87,7 @@ const TrailerSelector = ({ visible, handleChange, onTypeError }) => {
     </div>
   );
 };
+
 const UploadProgress = ({ width, message, visible }) => {
   if (!visible) return null;
 

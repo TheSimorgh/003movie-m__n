@@ -1,7 +1,22 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Label from "../form/Label";
 import { commonInputClasses } from "../../utils/theme";
-import LiveSearch from "../user/LiveSearch";
+import Input from "../form/Input";
+import TagsInput from "../global/TagsInput";
+import LiveSearch from "../global/LiveSearch";
+// import LiveSearch from "../user/LiveSearch";
+
+// import TagsInput from "../global/TagsInput";
+import Submit_Btn from "../form/Submit_Btn";
+import DirectorSelector from "./DirectorSelector";
+import LabelWithBadge from "../form/LabelWithBadge";
+import { useNotification } from "../../hooks";
+import ViewAll_Btn from "../global/ViewAll_Btn";
+import WritersModal from "../modals/WritersModal";
+import CastModal from "../modals/CastModal";
+import GenresModal from "../modals/GenresModal";
+import CastForm from "./CastForm";
 export const results = [
   {
     id: "1",
@@ -40,7 +55,17 @@ export const results = [
     name: "Edward Howell",
   },
 ];
-import TagsInput from "../global/TagsInput";
+export const renderItem = (result) => {
+  return (
+    <div
+      key={result.name}
+      className=" flex space-x-2 rounded overflow-hidden "
+    >
+      <img src={result.avatar} alt={result.name} className="w-16 h-16" />
+      <p className="dark:text-white font-semibold">{result.name}</p>
+    </div>
+  );
+};
 
 const defaultMovieInfo = {
   title: "",
@@ -56,39 +81,121 @@ const defaultMovieInfo = {
   language: "",
   status: "",
 };
-const MovieForm = () => {
+const MovieForm = ({ busy, onSubmit }) => {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
- 
- 
+  const [showWritersModal, setShowWritersModal] = useState(false);
+  const [showGenresModal, setShowGenresModal] = useState(false);
+  const [showCastModal, setShowCastModal] = useState(false);
+
+  const { updateNotification } = useNotification();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(movieInfo);
+  };
+  const handleChange = ({ target }) => {
+    const { value, name, files } = target;
+    if (name === "poster") {
+      const poster = files[0];
+      console.log(poster);
+    }
+    setMovieInfo({ ...movieInfo, [name]: value });
+  };
   const updateTags = (tags) => {
     setMovieInfo({ ...movieInfo, tags });
   };
- const renderItem= (result)=>{
-    return <div key={result.key} className=" flex space-x-2 rounded overflow-hidden "   >
-      <img src={result.avatar} alt={result.name} className="w-16 h-16" />
-      <p className="dark:text-white font-semibold" >{result.name}</p>
-    </div>
+  const updateDirector = (profile) => {
+    setMovieInfo({ ...movieInfo, director: profile });
+  };
+
+  const updateWrites = (profile) => {
+    const { writes } = movieInfo;
+    for (let writer of writers) {
+      if (writer.id === profile.id) {
+        return updateNotification(
+          "warning",
+          "This profile is already selected!"
+        );
+      }
+    }
+    setMovieInfo({ ...movieInfo, writers: [...writers, profile] });
+  };
+
+  const updateCast=(castInfo)=>{
+    const {cast}=movieInfo;
+
+    setMovieInfo({...movieInfo, cast: [...cast, castInfo]})
+
   }
-     // cast, tags, genres, writers
-     const { tags, genres, cast, writers, director, poster } = movieInfo;
+
+
+
+  const handleWriterRemove = (profileId) => {
+    const { writers } = movieInfo;
+    const newWriters = writers.filter(({ id }) => id !== profileId);
+    if (!newWriters.length) setShowWritersModal(false);
+    setMovieInfo({ ...movieInfo, writers: [...newWriters] });
+  };
+
+  const handleCastRemove = (profileId) => {
+    const { cast } = movieInfo;
+    const newCast = writers.filter(({ profile }) => profile.id !== profileId);
+    if (!newCast.length) setShowCastModal(false);
+    setMovieInfo({ ...movieInfo, cast: [...newCast] });
+  };
+  // const renderItem = (result) => {
+  //   return (
+  //     <div
+  //       key={result.name}
+  //       className=" flex space-x-2 rounded overflow-hidden "
+  //     >
+  //       <img src={result.avatar} alt={result.name} className="w-16 h-16" />
+  //       <p className="dark:text-white font-semibold">{result.name}</p>
+  //     </div>
+  //   );
+  // };
+
+  const {
+    title,
+    storyLine,
+    writers,
+    cast,
+    tags,
+    releseDate,
+    genres,
+    type,
+    language,
+    director,
+    status,
+  } = movieInfo;
+
+  const toggleWritersModal = () => {
+    setShowWritersModal((prev) => !prev);
+  };
+
+  const toggleCastModal = () => {
+    setShowCastModal((prev) => !prev);
+  };
+  const toggleGenresModal = () => {
+    setShowGenresModal((prev) => !prev);
+  };
+
+
   return (
     <>
       <div onSubmit={handleSubmit} className="flex space-x-3">
         <div className="w-[70%] space-y-5">
           <div>
-          <Label htmlFor="title">Title</Label>
-            <input
+            <Label htmlFor="title">Title</Label>
+
+            <Input
               id="title"
               value={title}
               onChange={handleChange}
               name="title"
               type="text"
-              className={
-                commonInputClasses + " border-b-2 font-semibold text-xl"
-              }
-              placeholder="Titanic"
+              className={`border-b-2 font-semibold text-xl ${commonInputClasses}`}
+              placeholder="Title"
             />
-
           </div>
           <div>
             <Label htmlFor="storyLine">Story line</Label>
@@ -101,14 +208,96 @@ const MovieForm = () => {
               placeholder="Movie storyline..."
             ></textarea>
           </div>
-  
+
           <div>
             <Label htmlFor="tags">Tags</Label>
             <TagsInput value={tags} name="tags" onChange={updateTags} />
           </div>
-          <LiveSearch placeholder="Search profile"  results={results} renderItem={renderItem} onSelect={(result=>console.log(result))} />
+          {/* <DirectorSelector  /> */}
+          <div>
+            <Label htmlFor="director">Director</Label>
+
+            <LiveSearch
+              name="director"
+              value={director.name}
+              results={results}
+              placeholder="Search director profile"
+              renderItem={renderItem}
+              onSelect={updateDirector}
+            />
+          </div>
+
+          <div className="">
+            <div className="flex justify-between">
+              <LabelWithBadge badge={writers.length} htmlFor="writers">
+                Writers
+              </LabelWithBadge>
+
+              <ViewAll_Btn
+                onClick={toggleWritersModal}
+                visible={writers.length}
+              >
+                View All
+              </ViewAll_Btn>
+            </div>
+            <LiveSearch
+            name="writers"
+            results={results}
+            placeholder="Search writers profile"
+            renderItem={renderItem}
+            onSelect={updateWrites}
+          />
+          </div>
+          <div>
+            <div className="flex justify-between">
+              <LabelWithBadge badge={cast.length}>
+                Add Cast & Crew
+              </LabelWithBadge>
+              <ViewAll_Btn onClick={toggleCastModal} visible={cast.length}>
+                View All
+              </ViewAll_Btn>
+            </div>
+            <CastForm onSubmit={updateCast} />
+          </div>
+
+          {/* 
+          <div className="">
+            <div className="flex justify-between">
+            <LabelWithBadge badge={writers.length} htmlFor="writers">
+                Writers
+              </LabelWithBadge>          
+                </div>
+          </div> */}
+          <div>
+            <Label>LiveSearch Cmp test</Label>
+            <LiveSearch
+              placeholder="Search Profile"
+              results={results}
+              renderItem={renderItem}
+              onSelect={(result) => console.log(result)}
+            />
+          </div>
+
+          <Submit_Btn
+            type="button"
+            busy={busy}
+            value={"Upload"}
+            onClick={handleSubmit}
+          />
         </div>
+        <div className="w-[30%] space-y-5 bg-red-500"></div>
       </div>
+
+      <WritersModal
+        visible={showWritersModal}
+        profiles={writers}
+        onClose={toggleWritersModal}
+        onRemoveClick={handleWriterRemove}
+      />
+      <CastModal visible={showCastModal}
+        casts={cast} onClose={toggleCastModal}
+        onRemoveClick={handleCastRemove} />
+      <GenresModal visible={showGenresModal} />
     </>
   );
 };

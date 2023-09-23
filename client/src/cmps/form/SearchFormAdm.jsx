@@ -37,7 +37,7 @@ const SearchFormAdm = ({
           type="button"
           className="absolute top-1/2 -translate-y-1/2 right-2 text-secondary dark:text-white"
         >
-          <AiOutlineClose />
+          {value.length ?        <AiOutlineClose /> :null}
         </button>
       ) : null}
     </form>

@@ -56,9 +56,7 @@ export default Header;
 const CreateOptions = ({ options, visible, onClose }) => {
     const container =useRef()
     const containerID = "options-container";
-  const handleClick = (e) => {
 
-  };
 
 
   useEffect(()=>{
@@ -73,7 +71,7 @@ const CreateOptions = ({ options, visible, onClose }) => {
     //  container.current.classList.remove("animate-scale");
     //    container.current.classList.add("animate-scale-reverse");
 
-    if (container.current) {
+    if (container?.current) {
         if (!container.current.classList.contains("animate-scale"))
           container.current.classList.add("animate-scale-reverse");
       }
@@ -82,6 +80,10 @@ const CreateOptions = ({ options, visible, onClose }) => {
     return ()=>{document.removeEventListener("click",handleClose) }
   },[visible])
 
+  const handleClick = (fn) => {
+    fn();
+    onClose();
+  };
   if (!visible) return null;
   return (
     <div 
@@ -94,8 +96,9 @@ const CreateOptions = ({ options, visible, onClose }) => {
     className="absolute right-5 z-50 top-20 flex flex-col space-y-3 p-5 dark:bg-secondary bg-white drop-shadow-lg rounded animate-scale">
       {options.map((e) => (
         <Option key={e.title}
-        onClick={e.onClick}
-         >
+        // onClick={e.onClick}
+          onClick={()=>handleClick(e.onClick)}
+>
           {e.title}
         </Option>
       ))}

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-const TagsInput = () => {
+const TagsInput = ({name, value, onChange}) => {
     const [tag, setTag] = useState("");
     const [tags, setTags] = useState([]);
   
@@ -27,10 +27,11 @@ const TagsInput = () => {
       setTag("");
     }
 
-    if (key === "Backspace" && !tag && tags.length) {
+    if (key === "Backspace" || key === "Escape" && !tag && tags.length) {
       const newTags = tags.filter((_, index) => index !== tags.length - 1);
       setTags([...newTags]);
     }
+ 
   };
 
 
@@ -62,6 +63,9 @@ const TagsInput = () => {
     input.current?.scrollIntoView(false);
   }, [tag]);
 
+
+  useEffect(()=>{onChange(tags)},[tags])
+
   return (
     <div>
       <div
@@ -78,7 +82,7 @@ const TagsInput = () => {
           ref={input}
           type="text"
           id={name}
-          className="h-full flex-grow bg-transparent outline-none dark:text-white"
+          className="h-full flex-grow bg-transparent outline-none dark:text-white text-secondary"
           placeholder="Tag one, Tag two"
           value={tag}
           onChange={handleOnChange}
