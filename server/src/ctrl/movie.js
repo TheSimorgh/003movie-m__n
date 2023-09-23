@@ -290,11 +290,12 @@ exports.delete_movie = async (req, res) => {
   const { result } = await cloud.uploader.destroy(trailerId, {
     resource_type: "video",
   });
-  if (result !== "ok") return sendError(res, "Could not remove trailer from cloud!");
+  if (result !== "ok")
+    return sendError(res, "Could not remove trailer from cloud!");
 
-  const del_movie=await Movie.findByIdAndDelete(movieId);
+  const del_movie = await Movie.findByIdAndDelete(movieId);
 
-  res.json({ message: "Movie removed successfully.",del_movie });
+  res.json({ message: "Movie removed successfully.", del_movie });
 };
 
 exports.get_movies = async (req, res) => {
@@ -305,7 +306,26 @@ exports.get_movies = async (req, res) => {
     .skip(parseInt(pageNo) * parseInt(limit))
     .limit(parseInt(limit));
 
- 
+  const results = movies.map((movie) => ({
+    id: movie._id,
+    title: movie.title,
+    poster: movie.poster?.url,
+    responsivePosters: movie.poster?.responsive,
+    genres: movie.genres,
+    status: movie.status,
+  }));
+
+  res.json({ movies: results });
+};
+
+exports.all_movies = async (req, res) => {
+  const { pageNo = 0, limit = 10 } = req.query;
+
+  const movies = await Movie.find({})
+    .sort({ createdAt: -1 })
+    .skip(parseInt(pageNo) * parseInt(limit))
+    .limit(parseInt(limit));
+
   const results = movies.map((movie) => ({
     id: movie._id,
     title: movie.title,

@@ -57,10 +57,7 @@ export const results = [
 ];
 export const renderItem = (result) => {
   return (
-    <div
-      key={result.name}
-      className=" flex space-x-2 rounded overflow-hidden "
-    >
+    <div key={result.name} className=" flex space-x-2 rounded overflow-hidden ">
       <img src={result.avatar} alt={result.name} className="w-16 h-16" />
       <p className="dark:text-white font-semibold">{result.name}</p>
     </div>
@@ -120,14 +117,11 @@ const MovieForm = ({ busy, onSubmit }) => {
     setMovieInfo({ ...movieInfo, writers: [...writers, profile] });
   };
 
-  const updateCast=(castInfo)=>{
-    const {cast}=movieInfo;
+  const updateCast = (castInfo) => {
+    const { cast } = movieInfo;
 
-    setMovieInfo({...movieInfo, cast: [...cast, castInfo]})
-
-  }
-
-
+    setMovieInfo({ ...movieInfo, cast: [...cast, castInfo] });
+  };
 
   const handleWriterRemove = (profileId) => {
     const { writers } = movieInfo;
@@ -178,7 +172,6 @@ const MovieForm = ({ busy, onSubmit }) => {
   const toggleGenresModal = () => {
     setShowGenresModal((prev) => !prev);
   };
-
 
   return (
     <>
@@ -241,12 +234,12 @@ const MovieForm = ({ busy, onSubmit }) => {
               </ViewAll_Btn>
             </div>
             <LiveSearch
-            name="writers"
-            results={results}
-            placeholder="Search writers profile"
-            renderItem={renderItem}
-            onSelect={updateWrites}
-          />
+              name="writers"
+              results={results}
+              placeholder="Search writers profile"
+              renderItem={renderItem}
+              onSelect={updateWrites}
+            />
           </div>
           <div>
             <div className="flex justify-between">
@@ -277,7 +270,13 @@ const MovieForm = ({ busy, onSubmit }) => {
               onSelect={(result) => console.log(result)}
             />
           </div>
-
+          <Input
+            name="releseDate"
+            value={releseDate}
+            onChange={handleChange}
+            type="date"
+            className={commonInputClasses + " border-2 rounded p-1 w-aut"}
+          />
           <Submit_Btn
             type="button"
             busy={busy}
@@ -294,9 +293,12 @@ const MovieForm = ({ busy, onSubmit }) => {
         onClose={toggleWritersModal}
         onRemoveClick={handleWriterRemove}
       />
-      <CastModal visible={showCastModal}
-        casts={cast} onClose={toggleCastModal}
-        onRemoveClick={handleCastRemove} />
+      <CastModal
+        visible={showCastModal}
+        casts={cast}
+        onClose={toggleCastModal}
+        onRemoveClick={handleCastRemove}
+      />
       <GenresModal visible={showGenresModal} />
     </>
   );
