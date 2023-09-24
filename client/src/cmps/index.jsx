@@ -8,6 +8,9 @@ export {default as Header} from "./admin/Header";
 export {default as NavbarAdm} from "./admin/NavbarAdm";
 export {default as MovieForm} from"./admin/MovieForm"
 export {default as CastForm} from"./admin/CastForm"
+export {default as PosterSelector} from"./admin/PosterSelcetor"
+
+
 
 export {default as ActorCreateModal} from"./admin/modals/ActorCreateModal"
 export {default as MovieUploadModal} from"./admin/modals/MovieUploadModal"

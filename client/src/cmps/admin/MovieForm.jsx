@@ -5,6 +5,8 @@ import { commonInputClasses } from "../../utils/theme";
 import Input from "../form/Input";
 import TagsInput from "../global/TagsInput";
 import LiveSearch from "../global/LiveSearch";
+
+
 // import LiveSearch from "../user/LiveSearch";
 
 // import TagsInput from "../global/TagsInput";
@@ -17,6 +19,8 @@ import WritersModal from "../modals/WritersModal";
 import CastModal from "../modals/CastModal";
 import GenresModal from "../modals/GenresModal";
 import CastForm from "./CastForm";
+import {PosterSelector} from "../../cmps"
+
 export const results = [
   {
     id: "1",
@@ -78,8 +82,10 @@ const defaultMovieInfo = {
   language: "",
   status: "",
 };
+export const img_accept_files="image/jpg, image/jpeg, image/png"
 const MovieForm = ({ busy, onSubmit }) => {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
+  const [selectedPoster,setSelectedPoster]=({})
   const [showWritersModal, setShowWritersModal] = useState(false);
   const [showGenresModal, setShowGenresModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
@@ -89,11 +95,20 @@ const MovieForm = ({ busy, onSubmit }) => {
     e.preventDefault();
     console.log(movieInfo);
   };
+  const updatePosterForUI=(file)=>{
+    const url=URL.createObjectURL(file)
+    return setSelectedPoster(url)
+  }
   const handleChange = ({ target }) => {
     const { value, name, files } = target;
     if (name === "poster") {
       const poster = files[0];
+      // setSelectedPoster(URL.createObjectURL(poster))
+      updatePosterForUI(poster)
       console.log(poster);
+     return  setMovieInfo({ ...movieInfo, poster });
+
+  
     }
     setMovieInfo({ ...movieInfo, [name]: value });
   };
@@ -277,6 +292,7 @@ const MovieForm = ({ busy, onSubmit }) => {
             type="date"
             className={commonInputClasses + " border-2 rounded p-1 w-aut"}
           />
+      <PosterSelector accept={img_accept_files} name="poster" onChange={handleChange} selectedPoster={selectedPoster} />
           <Submit_Btn
             type="button"
             busy={busy}
@@ -284,7 +300,9 @@ const MovieForm = ({ busy, onSubmit }) => {
             onClick={handleSubmit}
           />
         </div>
-        <div className="w-[30%] space-y-5 bg-red-500"></div>
+        <div className="w-[30%] space-y-5 bg-red-500">
+          
+        </div>
       </div>
 
       <WritersModal

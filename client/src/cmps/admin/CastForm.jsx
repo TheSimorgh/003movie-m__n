@@ -29,6 +29,7 @@ const CastForm = ({onSubmit}) => {
   };
 
   const handleProfileSelect = (profile) => {
+    
     setCastInfo({ ...castInfo, profile });
   };
   const handleProfileChange = ({ target }) => {

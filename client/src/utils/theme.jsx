@@ -3,3 +3,6 @@ export const commonModalClasses =
 
 export const commonInputClasses =
   "w-full bg-transparent outline-none dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary transition dark:text-white text-primary";
+
+  export const commonPosterUI =
+  "flex justify-center items-center border border-dashed rounded aspect-video dark:border-dark-subtle border-light-subtle cursor-pointer";
