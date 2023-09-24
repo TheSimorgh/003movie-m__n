@@ -1,25 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import Label from "../form/Label";
 import { commonInputClasses } from "../../utils/theme";
-import Input from "../form/Input";
-import TagsInput from "../global/TagsInput";
-import LiveSearch from "../global/LiveSearch";
-
-
-// import LiveSearch from "../user/LiveSearch";
-
-// import TagsInput from "../global/TagsInput";
-import Submit_Btn from "../form/Submit_Btn";
-import DirectorSelector from "./DirectorSelector";
-import LabelWithBadge from "../form/LabelWithBadge";
 import { useNotification } from "../../hooks";
-import ViewAll_Btn from "../global/ViewAll_Btn";
-import WritersModal from "../modals/WritersModal";
-import CastModal from "../modals/CastModal";
-import GenresModal from "../modals/GenresModal";
-import CastForm from "./CastForm";
-import {PosterSelector} from "../../cmps"
+import {TagsInput,Label,Input,CastForm,ViewAll_Btn,LiveSearch,LabelWithBadge,Submit_Btn,DirectorSelector,GenresSelector, PosterSelector ,CastForm,GenresModal,CastModal,WritersModal,} from "../../cmps"
 
 export const results = [
   {
@@ -138,6 +121,10 @@ const MovieForm = ({ busy, onSubmit }) => {
     setMovieInfo({ ...movieInfo, cast: [...cast, castInfo] });
   };
 
+  const updateGenres=(genres)=>{
+    setMovieInfo({...movieInfo,genres})
+
+  }
   const handleWriterRemove = (profileId) => {
     const { writers } = movieInfo;
     const newWriters = writers.filter(({ id }) => id !== profileId);
@@ -151,6 +138,8 @@ const MovieForm = ({ busy, onSubmit }) => {
     if (!newCast.length) setShowCastModal(false);
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
+
+
   // const renderItem = (result) => {
   //   return (
   //     <div
@@ -293,6 +282,8 @@ const MovieForm = ({ busy, onSubmit }) => {
             className={commonInputClasses + " border-2 rounded p-1 w-aut"}
           />
       <PosterSelector accept={img_accept_files} name="poster" onChange={handleChange} selectedPoster={selectedPoster} />
+         <GenresSelector  badge={genres.length}  onClick={toggleGenresModal}/>
+         
           <Submit_Btn
             type="button"
             busy={busy}
@@ -317,7 +308,7 @@ const MovieForm = ({ busy, onSubmit }) => {
         onClose={toggleCastModal}
         onRemoveClick={handleCastRemove}
       />
-      <GenresModal visible={showGenresModal} />
+      <GenresModal onSubmit={updateGenres}  previousSelection={genres} visible={showGenresModal}  onClose={toggleGenresModal} />
     </>
   );
 };
