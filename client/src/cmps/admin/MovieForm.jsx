@@ -2,8 +2,24 @@
 import React, { useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
 import { useNotification } from "../../hooks";
-import {TagsInput,Label,Input,CastForm,ViewAll_Btn,LiveSearch,LabelWithBadge,Submit_Btn,DirectorSelector,GenresSelector, PosterSelector ,CastForm,GenresModal,CastModal,WritersModal,} from "../../cmps"
-
+import {
+  TagsInput,
+  Label,
+  Input,
+  CastForm,
+  ViewAll_Btn,
+  LiveSearch,
+  LabelWithBadge,
+  Submit_Btn,
+  DirectorSelector,
+  GenresSelector,
+  PosterSelector,
+  GenresModal,
+  CastModal,
+  WritersModal,
+  Selector,
+} from "../../cmps";
+import {typeOptions,statusOptions,languageOptions} from "../../utils/options"
 export const results = [
   {
     id: "1",
@@ -65,10 +81,10 @@ const defaultMovieInfo = {
   language: "",
   status: "",
 };
-export const img_accept_files="image/jpg, image/jpeg, image/png"
+export const img_accept_files = "image/jpg, image/jpeg, image/png";
 const MovieForm = ({ busy, onSubmit }) => {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
-  const [selectedPoster,setSelectedPoster]=({})
+  const [selectedPosterForUI, setSelectedPosterForUI] = useState("");
   const [showWritersModal, setShowWritersModal] = useState(false);
   const [showGenresModal, setShowGenresModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
@@ -78,20 +94,18 @@ const MovieForm = ({ busy, onSubmit }) => {
     e.preventDefault();
     console.log(movieInfo);
   };
-  const updatePosterForUI=(file)=>{
-    const url=URL.createObjectURL(file)
-    return setSelectedPoster(url)
-  }
+  const updatePosterForUI = (file) => {
+    const url = URL.createObjectURL(file);
+    return setSelectedPosterForUI(url);
+  };
   const handleChange = ({ target }) => {
     const { value, name, files } = target;
     if (name === "poster") {
       const poster = files[0];
       // setSelectedPoster(URL.createObjectURL(poster))
-      updatePosterForUI(poster)
+      updatePosterForUI(poster);
       console.log(poster);
-     return  setMovieInfo({ ...movieInfo, poster });
-
-  
+      return setMovieInfo({ ...movieInfo, poster });
     }
     setMovieInfo({ ...movieInfo, [name]: value });
   };
@@ -121,10 +135,9 @@ const MovieForm = ({ busy, onSubmit }) => {
     setMovieInfo({ ...movieInfo, cast: [...cast, castInfo] });
   };
 
-  const updateGenres=(genres)=>{
-    setMovieInfo({...movieInfo,genres})
-
-  }
+  const updateGenres = (genres) => {
+    setMovieInfo({ ...movieInfo, genres });
+  };
   const handleWriterRemove = (profileId) => {
     const { writers } = movieInfo;
     const newWriters = writers.filter(({ id }) => id !== profileId);
@@ -138,7 +151,6 @@ const MovieForm = ({ busy, onSubmit }) => {
     if (!newCast.length) setShowCastModal(false);
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
-
 
   // const renderItem = (result) => {
   //   return (
@@ -166,16 +178,40 @@ const MovieForm = ({ busy, onSubmit }) => {
     status,
   } = movieInfo;
 
-  const toggleWritersModal = () => {
-    setShowWritersModal((prev) => !prev);
+
+  const hideWritersModal = () => {
+    setShowWritersModal(false);
   };
 
-  const toggleCastModal = () => {
-    setShowCastModal((prev) => !prev);
+  const displayWritersModal = () => {
+    setShowWritersModal(true);
   };
-  const toggleGenresModal = () => {
-    setShowGenresModal((prev) => !prev);
+
+  const hideCastModal = () => {
+    setShowCastModal(false);
   };
+
+  const displayCastModal = () => {
+    setShowCastModal(true);
+  };
+
+  const hideGenresModal = () => {
+    setShowGenresModal(false);
+  };
+
+  const displayGenresModal = () => {
+    setShowGenresModal(true);
+  };
+  // const toggleWritersModal = () => {
+  //   setShowWritersModal((prev) => !prev);
+  // };
+
+  // const toggleCastModal = () => {
+  //   setShowCastModal((prev) => !prev);
+  // };
+  // const toggleGenresModal = () => {
+  //   setShowGenresModal((prev) => !prev);
+  // };
 
   return (
     <>
@@ -231,7 +267,10 @@ const MovieForm = ({ busy, onSubmit }) => {
               </LabelWithBadge>
 
               <ViewAll_Btn
-                onClick={toggleWritersModal}
+                // onClick={toggleWritersModal}
+                onClick={displayWritersModal}
+
+
                 visible={writers.length}
               >
                 View All
@@ -250,7 +289,10 @@ const MovieForm = ({ busy, onSubmit }) => {
               <LabelWithBadge badge={cast.length}>
                 Add Cast & Crew
               </LabelWithBadge>
-              <ViewAll_Btn onClick={toggleCastModal} visible={cast.length}>
+              <ViewAll_Btn 
+              onClick={displayCastModal}
+              // onClick={toggleCastModal}
+               visible={cast.length}>
                 View All
               </ViewAll_Btn>
             </div>
@@ -281,9 +323,7 @@ const MovieForm = ({ busy, onSubmit }) => {
             type="date"
             className={commonInputClasses + " border-2 rounded p-1 w-aut"}
           />
-      <PosterSelector accept={img_accept_files} name="poster" onChange={handleChange} selectedPoster={selectedPoster} />
-         <GenresSelector  badge={genres.length}  onClick={toggleGenresModal}/>
-         
+
           <Submit_Btn
             type="button"
             busy={busy}
@@ -291,24 +331,66 @@ const MovieForm = ({ busy, onSubmit }) => {
             onClick={handleSubmit}
           />
         </div>
-        <div className="w-[30%] space-y-5 bg-red-500">
-          
+        <div className="w-[30%] space-y-5 ">
+          <PosterSelector
+            lable="Select poster"
+            accept={img_accept_files}
+            name="poster"
+            onChange={handleChange}
+            selectedPoster={selectedPosterForUI}
+          />
+          <GenresSelector badge={genres.length}
+          //  onClick={toggleGenresModal}
+          onClick={displayGenresModal}
+           />
+          <Selector
+            onChange={handleChange}
+            name="type"
+            value={type}
+            options={typeOptions}
+            label="Type"
+          />
+          <Selector
+            onChange={handleChange}
+            name="language"
+            value={language}
+            options={languageOptions}
+            label="Language"
+          />
+          <Selector
+            onChange={handleChange}
+            name="status"
+            value={status}
+            options={statusOptions}
+            label="Status"
+          />
         </div>
       </div>
-
       <WritersModal
         visible={showWritersModal}
         profiles={writers}
-        onClose={toggleWritersModal}
+        // onClose={()=>setShowWritersModal(false)}
+        // onClose={toggleWritersModal}
+        onClose={hideWritersModal}
         onRemoveClick={handleWriterRemove}
       />
       <CastModal
         visible={showCastModal}
         casts={cast}
-        onClose={toggleCastModal}
+        // onClose={toggleCastModal}
+        onClose={hideCastModal}
+
         onRemoveClick={handleCastRemove}
       />
-      <GenresModal onSubmit={updateGenres}  previousSelection={genres} visible={showGenresModal}  onClose={toggleGenresModal} />
+      <GenresModal
+        onSubmit={updateGenres}
+         previousSelection={genres}
+        visible={showGenresModal}
+        // onClose={toggleGenresModal}
+        onClose={hideGenresModal}
+        onClick={showGenresModal}
+      />
+      
     </>
   );
 };

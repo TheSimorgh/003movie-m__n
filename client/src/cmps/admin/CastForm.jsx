@@ -4,7 +4,7 @@ import LiveSearch from "../global/LiveSearch";
 import { results } from "./MovieForm";
 import { useNotification } from "../../hooks";
 import Input from "../form/Input";
-import Btn from "../form/Btn";
+import Btn from "../global/Btn";
 import { renderItem } from "../../utils/helper";
 
 // const cast = [{ actor: id, roleAs: "", leadActor: true }];

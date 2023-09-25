@@ -1,9 +1,10 @@
-import Btn from "../form/Btn";
+import Btn from "../global/Btn";
 import { ImTree } from "react-icons/im";
 
 const GenresSelector = ({ badge, onClick }) => {
+
   const renderBadge = () => {
-    if (badge) return null;
+
     return (
       <span className="dark:bg-dark-subtle bg-light-subtle text-white absolute top-0 right-0 translate-x-2 -translate-y-1 text-xs w-5 h-5 rounded-full flex justify-center items-center">
         {badge <= 9 ? badge : "9+"}

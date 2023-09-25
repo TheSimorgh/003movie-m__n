@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import Input from "../form/Input";
 import Label from "../form/Label";
@@ -26,7 +27,7 @@ const PosterSelector = ({
         {selectedPoster ? (
           <img             className={commonPosterUI + " object-cover " + className}
           src={selectedPoster} alt={name} />
-        ) : <PosterUI className={className} label={lable}/>}
+        ) : <PosterUI className={className} label={label}/>}
       </Label>
     </div>
   );
