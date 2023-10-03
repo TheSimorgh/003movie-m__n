@@ -333,7 +333,7 @@ const MovieForm = ({ busy, onSubmit }) => {
         </div>
         <div className="w-[30%] space-y-5 ">
           <PosterSelector
-            lable="Select poster"
+            label="Select poster"
             accept={img_accept_files}
             name="poster"
             onChange={handleChange}

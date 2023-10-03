@@ -12,6 +12,7 @@ export {default as CastForm} from"./admin/CastForm"
 export {default as PosterSelector} from"./admin/PosterSelcetor"
 export {default as GenresSelector} from"./admin/GenreSelector"
 export {default as DirectorSelector} from"./admin/DirectorSelector"
+export {default as ActorForm} from"./admin/ActorForm"
 
 
 

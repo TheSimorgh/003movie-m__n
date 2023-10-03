@@ -101,8 +101,11 @@ const LiveSearch = ({
     setFocusedIndex(-1);
   };
 
-  const handleChange = (e) => {setDefaultValue(e.target.value);
-    onChange && onChange(e);}  
+  const handleChange = (e) => {
+    setDefaultValue(e.target.value);
+    onChange && onChange(e)}  
+
+
     useEffect(() => {
       setDefaultValue(value);
       console.log(results);
