@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 
+import { commonInputClasses } from "../../utils/theme"
 
 
 
@@ -11,7 +12,7 @@ const Input = ({textarea, onChange,value,name,id,type="text",placeholder="Search
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={className }
+      className={className + " border-b-2 resize-none h-full"}
       {...rest}
     ></textarea>
     )
