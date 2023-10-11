@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import Btn from "../global/Btn";
 import React, { useEffect, useState } from "react";
 import { ImSpinner3 } from "react-icons/im";
@@ -27,6 +28,7 @@ const validateActor = ({ avatar, name, about, gender }) => {
 
   if (!avatar && !avatar.type?.startsWith("image"))
     return { error: "Invalid image / avatar file!" };
+    return { error: null };
 };
 
 const ActorForm = ({ busy, onSubmit, title, btnTitle }) => {
@@ -67,7 +69,7 @@ const ActorForm = ({ busy, onSubmit, title, btnTitle }) => {
         <h1 className="font-semibold text-xl dark:text-white text-primary">
           {title}
         </h1>
-        <Btn>{busy ? <ImSpinner3 className="animate-spin" /> : btnTitle}</Btn>
+        <Btn  type="submit">{busy ? <ImSpinner3 className="animate-spin" /> : btnTitle}</Btn>
       </div>
 
       <div className="flex space-x-2">

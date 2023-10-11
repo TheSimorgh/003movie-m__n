@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
-import { useNotification } from "../../hooks";
+import { useNotification, useSearch } from "../../hooks";
 import {
   TagsInput,
   Label,
@@ -18,46 +18,49 @@ import {
   CastModal,
   WritersModal,
   Selector,
+  WriterSelector
 } from "../../cmps";
 import {typeOptions,statusOptions,languageOptions} from "../../utils/options"
-export const results = [
-  {
-    id: "1",
-    avatar:
-      "https://images.unsplash.com/photo-1643713303351-01f540054fd7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "John Doe",
-  },
-  {
-    id: "2",
-    avatar:
-      "https://images.unsplash.com/photo-1643883135036-98ec2d9e50a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Chandri Anggara",
-  },
-  {
-    id: "3",
-    avatar:
-      "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Amin RK",
-  },
-  {
-    id: "4",
-    avatar:
-      "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Edward Howell",
-  },
-  {
-    id: "5",
-    avatar:
-      "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Amin RK",
-  },
-  {
-    id: "6",
-    avatar:
-      "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
-    name: "Edward Howell",
-  },
-];
+import { search_actor } from "../../api/actor";
+
+// export const results = [
+//   {
+//     id: "1",
+//     avatar:
+//       "https://images.unsplash.com/photo-1643713303351-01f540054fd7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+//     name: "John Doe",
+//   },
+//   {
+//     id: "2",
+//     avatar:
+//       "https://images.unsplash.com/photo-1643883135036-98ec2d9e50a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+//     name: "Chandri Anggara",
+//   },
+//   {
+//     id: "3",
+//     avatar:
+//       "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+//     name: "Amin RK",
+//   },
+//   {
+//     id: "4",
+//     avatar:
+//       "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+//     name: "Edward Howell",
+//   },
+//   {
+//     id: "5",
+//     avatar:
+//       "https://images.unsplash.com/photo-1578342976795-062a1b744f37?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+//     name: "Amin RK",
+//   },
+//   {
+//     id: "6",
+//     avatar:
+//       "https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+//     name: "Edward Howell",
+//   },
+// ];
 export const renderItem = (result) => {
   return (
     <div key={result.name} className=" flex space-x-2 rounded overflow-hidden ">
@@ -89,7 +92,19 @@ const MovieForm = ({ busy, onSubmit }) => {
   const [showGenresModal, setShowGenresModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
 
+  // const [directorsProfile,setDirectorsProfile]=useState([])
+  // const [writersProfile,setWritersProfile]=useState([])
+  // const [writerName,setWriterName]=useState("")
+
+  
+
+
+
   const { updateNotification } = useNotification();
+  const {handleSearch}=useSearch();
+
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(movieInfo);
@@ -114,6 +129,7 @@ const MovieForm = ({ busy, onSubmit }) => {
   };
   const updateDirector = (profile) => {
     setMovieInfo({ ...movieInfo, director: profile });
+    
   };
 
   const updateWrites = (profile) => {
@@ -127,6 +143,7 @@ const MovieForm = ({ busy, onSubmit }) => {
       }
     }
     setMovieInfo({ ...movieInfo, writers: [...writers, profile] });
+    // setWriterName("")
   };
 
   const updateCast = (castInfo) => {
@@ -143,6 +160,7 @@ const MovieForm = ({ busy, onSubmit }) => {
     const newWriters = writers.filter(({ id }) => id !== profileId);
     if (!newWriters.length) setShowWritersModal(false);
     setMovieInfo({ ...movieInfo, writers: [...newWriters] });
+  
   };
 
   const handleCastRemove = (profileId) => {
@@ -213,6 +231,18 @@ const MovieForm = ({ busy, onSubmit }) => {
   //   setShowGenresModal((prev) => !prev);
   // };
 
+  // const handleProfileChange=({target})=>{
+  //   const {name,value}=target;
+  //   if(name==="director"){
+  //     setMovieInfo({...movieInfo,director:{name:value}})
+  //     handleSearch(search_actor,value,setDirectorsProfile)
+  //   }
+  //   if(name==="writers"){
+  //     setWriterName(value)
+  //     handleSearch(search_actor,value,setWritersProfile)
+  //   }
+   
+  // }
   return (
     <>
       <div onSubmit={handleSubmit} className="flex space-x-3">
@@ -246,8 +276,8 @@ const MovieForm = ({ busy, onSubmit }) => {
             <Label htmlFor="tags">Tags</Label>
             <TagsInput value={tags} name="tags" onChange={updateTags} />
           </div>
-          {/* <DirectorSelector  /> */}
-          <div>
+           <DirectorSelector onSelect={updateDirector}  /> 
+          {/* <div>
             <Label htmlFor="director">Director</Label>
 
             <LiveSearch
@@ -257,8 +287,11 @@ const MovieForm = ({ busy, onSubmit }) => {
               placeholder="Search director profile"
               renderItem={renderItem}
               onSelect={updateDirector}
+              onChange={handleProfileChange}
+              visible={results.length}
+              
             />
-          </div>
+          </div> */}
 
           <div className="">
             <div className="flex justify-between">
@@ -276,14 +309,20 @@ const MovieForm = ({ busy, onSubmit }) => {
                 View All
               </ViewAll_Btn>
             </div>
-            <LiveSearch
+            {/* <LiveSearch
               name="writers"
-              results={results}
+              // results={results}
+              results={writersProfile}
               placeholder="Search writers profile"
               renderItem={renderItem}
               onSelect={updateWrites}
-            />
+              onChange={handleProfileChange}
+              value={writerName}
+              // visible={results.length}
+            /> */}
+                      <WriterSelector onSelect={updateWrites} />
           </div>
+
           <div>
             <div className="flex justify-between">
               <LabelWithBadge badge={cast.length}>

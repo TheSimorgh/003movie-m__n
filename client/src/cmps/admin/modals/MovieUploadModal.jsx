@@ -50,7 +50,10 @@ const MovieUploadModal = ({ visible, onClose }) => {
 
   }
   return (
-    <ModalContainer visible={visible} onClose={onClose}>
+    <ModalContainer visible={visible} 
+    // onClose={onClose
+    
+    >
       {/* <div className="mb-5">
         <UploadProgress
           visible={!videoUploaded && videoSelected}

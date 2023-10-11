@@ -3,18 +3,28 @@ import React, { useState } from "react";
 import Label from "../form/Label";
 import { renderItem } from "../../utils/helper";
 import LiveSearch from "../global/LiveSearch";
+import { useSearch } from "../../hooks";
+import { search_actor } from "../../api/actor";
+
 
 const DirectorSelector = ({ onSelect }) => {
   const [value, setValue] = useState("");
   const [profiles, setProfiles] = useState([]);
+const {handleSearch,resetSearch}=useSearch();
 
-  const handleOnSelect = (profile) => {
-    onSelect(profile);
-  };
   const handleOnChange = ({ target }) => {
     const { value } = target;
     setValue(value);
+    handleSearch(search_actor,value,setProfiles)
   };
+  const handleOnSelect = (profile) => {
+    setValue(profile.name);
+    onSelect(profile);
+    setProfiles([]);
+    resetSearch();
+  };
+
+
   return (
     <div>
       <Label htmlFor="director">Director</Label>
@@ -31,4 +41,8 @@ const DirectorSelector = ({ onSelect }) => {
   );
 };
 
-export default DirectorSelector;
+
+
+
+
+export default DirectorSelector

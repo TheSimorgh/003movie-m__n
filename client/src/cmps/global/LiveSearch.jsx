@@ -55,6 +55,7 @@ const LiveSearch = ({
   renderItem = null,
   resultContainerStyle,
   selectedResultStyle,
+ 
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -110,6 +111,11 @@ const LiveSearch = ({
       setDefaultValue(value);
       console.log(results);
     }, [value]);
+
+    useEffect(()=>{
+      if(results.length)return setDisplaySearch(true)
+      setDisplaySearch(false)
+    },[results.length])
   return (
     <div
       onKeyDown={handleKeyDown}

@@ -3,21 +3,22 @@ import { catchError, getToken } from "../utils/helper";
 import client from "./client";
 
 export const create_actor =async(formData)=>{
-    const token=getToken()
+    const token = getToken();
     try {
-        
-        const {data}=await client.post("/actor/create",formData,{
-            headers:{
-                authorization:"Bearer"+token,
-                "content-type":"multipart/form-data",
-            }
-        });
-        return data
+      const { data } = await client.post("/actor/create", formData, {
+        headers: {
+          authorization: "Bearer " + token,
+          "content-type": "multipart/form-data",
+        },
+      });
+      return data;
     } catch (error) {
-        return catchError(error)
+      return catchError(error);
     }
     
 }
+
+
 
 
 export const update_actor=async(id,formData)=>{

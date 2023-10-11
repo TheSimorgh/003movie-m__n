@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
 import LiveSearch from "../global/LiveSearch";
 import { results } from "./MovieForm";
-import { useNotification } from "../../hooks";
+import { useNotification, useSearch } from "../../hooks";
 import Input from "../form/Input";
 import Btn from "../global/Btn";
 import { renderItem } from "../../utils/helper";
+import { search_actor } from "../../api/actor";
 
 // const cast = [{ actor: id, roleAs: "", leadActor: true }];
 const defaultCastInfo = {
@@ -14,9 +15,11 @@ const defaultCastInfo = {
   leadActor: false,
 };
 
-const CastForm = ({onSubmit}) => {
+const CastForm = ({ onSubmit }) => {
   const [castInfo, setCastInfo] = useState({ ...defaultCastInfo });
-  const {updateNotification}=useNotification()
+  const [profiles, setProfiles] = useState([]);
+  const { updateNotification } = useNotification();
+  const { handleSearch, resetSearch } = useSearch();
 
   const { leadActor, profile, roleAs } = castInfo;
   const handleOnChange = ({ target }) => {
@@ -29,26 +32,30 @@ const CastForm = ({onSubmit}) => {
   };
 
   const handleProfileSelect = (profile) => {
-    
     setCastInfo({ ...castInfo, profile });
   };
   const handleProfileChange = ({ target }) => {
     const { value } = target;
     const { profile } = castInfo;
+    profile.name = value;
+    setCastInfo({ ...castInfo, ...profile });
+    handleSearch(search_actor, value, setProfiles);
   };
 
   const handleSubmit = () => {
     console.log(castInfo);
-    const {profile,roleAs}=castInfo;
-    if(!profile.name) return updateNotification("error","Cast profile is missing")
-    if(!roleAs.trim()) return updateNotification("error","Cast profile is missing")
-    onSubmit(castInfo)
-  setCastInfo({...defaultCastInfo,profile:{name:""}})
-
+    const { profile, roleAs } = castInfo;
+    if (!profile.name)
+      return updateNotification("error", "Cast profile is missing");
+    if (!roleAs.trim())
+      return updateNotification("error", "Cast profile is missing");
+    onSubmit(castInfo);
+    setCastInfo({ ...defaultCastInfo, profile: { name: "" } });
+    resetSearch();
   };
-  useEffect(() => {
-    console.log(leadActor);
-  }, [leadActor]);
+  // useEffect(() => {
+  //   console.log(leadActor);
+  // }, [leadActor]);
   return (
     <div className="flex items-center space-x-2">
       <Input
@@ -61,11 +68,12 @@ const CastForm = ({onSubmit}) => {
       />
       <LiveSearch
         placeholder="Search Profile"
-        onSelect={handleProfileSelect}
-        renderItem={renderItem}
-        results={results}
+        // results={results}
+        results={profiles}
         value={profile.name}
         onChange={handleProfileChange}
+        onSelect={handleProfileSelect}
+        renderItem={renderItem}
       />
       <span className="dark:text-dark-subtle text-light-subtle font-semibold">
         as
