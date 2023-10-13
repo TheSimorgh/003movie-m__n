@@ -18,10 +18,15 @@ import {
   CastModal,
   WritersModal,
   Selector,
-  WriterSelector
+  WriterSelector,
 } from "../../cmps";
-import {typeOptions,statusOptions,languageOptions} from "../../utils/options"
+import {
+  typeOptions,
+  statusOptions,
+  languageOptions,
+} from "../../utils/options";
 import { search_actor } from "../../api/actor";
+import { validateMovie } from "../../utils/validator";
 
 // export const results = [
 //   {
@@ -96,18 +101,62 @@ const MovieForm = ({ busy, onSubmit }) => {
   // const [writersProfile,setWritersProfile]=useState([])
   // const [writerName,setWriterName]=useState("")
 
-  
-
-
-
   const { updateNotification } = useNotification();
-  const {handleSearch}=useSearch();
-
-
+  const { handleSearch } = useSearch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(movieInfo);
+    const { error } = validateMovie(movieInfo);
+    if (error) return updateNotification("error", error);
+    // cast, tags, genres, writers
+    const { tags, genres, cast, writers, director, poster } = movieInfo;
+
+    const formData = new FormData();
+    //method 1
+    // formData.append("tags", JSON.stringify(tags));
+    // formData.append("genres", JSON.stringify(genres));
+    // const finalCast = cast.map((c) => c.id);
+    // formData.append("cast", JSON.stringify(finalCast));
+    // if (writers.length) {
+    //   const finalWriters = writers.map((c) => c.id);
+    //   formData.append("writers", JSON.stringify(finalWriters));
+    // }
+    // if (director.id) {
+    //   formData.append("director", director);
+    // }
+
+
+    //Method 2
+    const finalMovieInfo = {
+      ...movieInfo,
+    };
+
+    finalMovieInfo.tags=JSON.stringify(tags)
+    finalMovieInfo.genres=JSON.stringify(genres)
+  
+    // {
+    //   actor: { type: mongoose.Schema.Types.ObjectId, ref: "Actor" },
+    //   roleAs: String,
+    //   leadActor: Boolean,
+    // },
+    const finalCast=cast.map(c=>({
+      actor:c.profile.id,
+      rolesAs:c.rolesAs,
+      leadActor:c.leadActor
+    }))
+    finalMovieInfo.cast=JSON.stringify(finalCast)
+    if(writers.length){
+      const finalWriters=writers.map(w=>w.id)
+      finalMovieInfo.writers=JSON.stringify(finalWriters)
+    }
+    if(director.id) finalMovieInfo.director=director.id;
+    if(poster) finalMovieInfo.poster=poster;
+
+    for(let key in finalMovieInfo){
+      formData.append(key,finalMovieInfo[key])
+    }
+    onSubmit(formData);
   };
   const updatePosterForUI = (file) => {
     const url = URL.createObjectURL(file);
@@ -129,7 +178,6 @@ const MovieForm = ({ busy, onSubmit }) => {
   };
   const updateDirector = (profile) => {
     setMovieInfo({ ...movieInfo, director: profile });
-    
   };
 
   const updateWrites = (profile) => {
@@ -160,7 +208,6 @@ const MovieForm = ({ busy, onSubmit }) => {
     const newWriters = writers.filter(({ id }) => id !== profileId);
     if (!newWriters.length) setShowWritersModal(false);
     setMovieInfo({ ...movieInfo, writers: [...newWriters] });
-  
   };
 
   const handleCastRemove = (profileId) => {
@@ -195,7 +242,6 @@ const MovieForm = ({ busy, onSubmit }) => {
     director,
     status,
   } = movieInfo;
-
 
   const hideWritersModal = () => {
     setShowWritersModal(false);
@@ -241,7 +287,7 @@ const MovieForm = ({ busy, onSubmit }) => {
   //     setWriterName(value)
   //     handleSearch(search_actor,value,setWritersProfile)
   //   }
-   
+
   // }
   return (
     <>
@@ -276,7 +322,7 @@ const MovieForm = ({ busy, onSubmit }) => {
             <Label htmlFor="tags">Tags</Label>
             <TagsInput value={tags} name="tags" onChange={updateTags} />
           </div>
-           <DirectorSelector onSelect={updateDirector}  /> 
+          <DirectorSelector onSelect={updateDirector} />
           {/* <div>
             <Label htmlFor="director">Director</Label>
 
@@ -302,8 +348,6 @@ const MovieForm = ({ busy, onSubmit }) => {
               <ViewAll_Btn
                 // onClick={toggleWritersModal}
                 onClick={displayWritersModal}
-
-
                 visible={writers.length}
               >
                 View All
@@ -320,7 +364,7 @@ const MovieForm = ({ busy, onSubmit }) => {
               value={writerName}
               // visible={results.length}
             /> */}
-                      <WriterSelector onSelect={updateWrites} />
+            <WriterSelector onSelect={updateWrites} />
           </div>
 
           <div>
@@ -328,10 +372,11 @@ const MovieForm = ({ busy, onSubmit }) => {
               <LabelWithBadge badge={cast.length}>
                 Add Cast & Crew
               </LabelWithBadge>
-              <ViewAll_Btn 
-              onClick={displayCastModal}
-              // onClick={toggleCastModal}
-               visible={cast.length}>
+              <ViewAll_Btn
+                onClick={displayCastModal}
+                // onClick={toggleCastModal}
+                visible={cast.length}
+              >
                 View All
               </ViewAll_Btn>
             </div>
@@ -378,10 +423,11 @@ const MovieForm = ({ busy, onSubmit }) => {
             onChange={handleChange}
             selectedPoster={selectedPosterForUI}
           />
-          <GenresSelector badge={genres.length}
-          //  onClick={toggleGenresModal}
-          onClick={displayGenresModal}
-           />
+          <GenresSelector
+            badge={genres.length}
+            //  onClick={toggleGenresModal}
+            onClick={displayGenresModal}
+          />
           <Selector
             onChange={handleChange}
             name="type"
@@ -418,18 +464,16 @@ const MovieForm = ({ busy, onSubmit }) => {
         casts={cast}
         // onClose={toggleCastModal}
         onClose={hideCastModal}
-
         onRemoveClick={handleCastRemove}
       />
       <GenresModal
         onSubmit={updateGenres}
-         previousSelection={genres}
+        previousSelection={genres}
         visible={showGenresModal}
         // onClose={toggleGenresModal}
         onClose={hideGenresModal}
         onClick={showGenresModal}
       />
-      
     </>
   );
 };
