@@ -55,7 +55,7 @@ const MovieUploadModal = ({ visible, onClose }) => {
   };
   const handleSubmit = async (data) => {
     if (!videoInfo.url || !videoInfo.public_id)
-      return updateNotification("error", "Trailer is missong");
+      return updateNotification("error", "Trailer is missing");
     setBusy(true);
     data.append("trailer", JSON.stringify(videoInfo));
     const { error, movie } = await upload_movie(data);

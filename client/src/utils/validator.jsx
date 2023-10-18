@@ -33,7 +33,7 @@ const validatorMovie = (movieInfo) => {
   }
 
   // validation for cast we are checking if cast is an array or not
-  if (!cast.length) return { error: "Cast and crew are missing!" };
+  if (!cast?.length) return { error: "Cast and crew are missing!" };
   // we are checking tags needs to field with string value
   for (let c of cast) {
     if (typeof c !== "object") return { error: "Invalid cast!" };

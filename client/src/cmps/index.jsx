@@ -4,6 +4,9 @@ export {default as Logo} from "./global/Logo";
 export {default as  ModalContainer } from "./global/ModalContainer";
 export {default as  Selector } from "./global/Selector";
 export {default as Navbar} from "./global/Navbar";
+export {default as NextAndPrevBtn} from "./global/NextAndPrevBtn";
+
+
 
 export {default as Header} from "./admin/Header";
 export {default as NavbarAdm} from "./admin/NavbarAdm";
@@ -15,7 +18,12 @@ export {default as DirectorSelector} from"./admin/DirectorSelector"
 export {default as WriterSelector} from"./admin/WriterSelector"
 
 export {default as ActorForm} from"./admin/ActorForm"
-
+export {default as AppInfoBox} from"./admin/cmps/AppInfoBox"
+export {default as MovieListItem} from"./admin/cmps/MovieListItem"
+export {default as LatestUploads} from"./admin/cmps/LatestUploads"
+export {default as MostRatedMovies} from"./admin/cmps/MostRatedMovies"
+export {default as Actors} from"./admin//Actors"
+export {default as Movies} from"./admin/Movies"
 
 
 export {default as ActorCreateModal} from"./admin/modals/ActorCreateModal"

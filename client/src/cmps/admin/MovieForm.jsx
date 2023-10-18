@@ -26,7 +26,7 @@ import {
   languageOptions,
 } from "../../utils/options";
 import { search_actor } from "../../api/actor";
-import { validateMovie } from "../../utils/validator";
+import  validatorMovie from "../../utils/validator";
 
 // export const results = [
 //   {
@@ -107,7 +107,7 @@ const MovieForm = ({ busy, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(movieInfo);
-    const { error } = validateMovie(movieInfo);
+    const { error } = validatorMovie(movieInfo);
     if (error) return updateNotification("error", error);
     // cast, tags, genres, writers
     const { tags, genres, cast, writers, director, poster } = movieInfo;
@@ -196,7 +196,6 @@ const MovieForm = ({ busy, onSubmit }) => {
 
   const updateCast = (castInfo) => {
     const { cast } = movieInfo;
-
     setMovieInfo({ ...movieInfo, cast: [...cast, castInfo] });
   };
 
@@ -212,7 +211,7 @@ const MovieForm = ({ busy, onSubmit }) => {
 
   const handleCastRemove = (profileId) => {
     const { cast } = movieInfo;
-    const newCast = writers.filter(({ profile }) => profile.id !== profileId);
+    const newCast = cast.filter(({ profile }) => profile.id !== profileId);
     if (!newCast.length) setShowCastModal(false);
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
@@ -391,7 +390,8 @@ const MovieForm = ({ busy, onSubmit }) => {
               </LabelWithBadge>          
                 </div>
           </div> */}
-          <div>
+
+          {/* <div>
             <Label>LiveSearch Cmp test</Label>
             <LiveSearch
               placeholder="Search Profile"
@@ -399,7 +399,7 @@ const MovieForm = ({ busy, onSubmit }) => {
               renderItem={renderItem}
               onSelect={(result) => console.log(result)}
             />
-          </div>
+          </div> */}
           <Input
             name="releseDate"
             value={releseDate}

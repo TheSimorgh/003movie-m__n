@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
 import LiveSearch from "../global/LiveSearch";
-import { results } from "./MovieForm";
+// import { results } from "./MovieForm";
 import { useNotification, useSearch } from "../../hooks";
 import Input from "../form/Input";
 import Btn from "../global/Btn";
@@ -22,12 +22,11 @@ const CastForm = ({ onSubmit }) => {
   const { handleSearch, resetSearch } = useSearch();
 
   const { leadActor, profile, roleAs } = castInfo;
+
+
   const handleOnChange = ({ target }) => {
     const { checked, name, value } = target;
-
-    if (name === "leadActor")
-      return setCastInfo({ ...castInfo, leadActor: checked });
-
+    if (name === "leadActor")return setCastInfo({ ...castInfo, leadActor: checked });
     setCastInfo({ ...castInfo, [name]: value });
   };
 
@@ -45,10 +44,10 @@ const CastForm = ({ onSubmit }) => {
   const handleSubmit = () => {
     console.log(castInfo);
     const { profile, roleAs } = castInfo;
-    if (!profile.name)
+    if (!profile?.name)
       return updateNotification("error", "Cast profile is missing");
-    if (!roleAs.trim())
-      return updateNotification("error", "Cast profile is missing");
+    if (!roleAs?.trim())
+      return updateNotification("error", "Cast role is missing!");
     onSubmit(castInfo);
     setCastInfo({ ...defaultCastInfo, profile: { name: "" } });
     resetSearch();
@@ -67,8 +66,8 @@ const CastForm = ({ onSubmit }) => {
         checked={leadActor}
       />
       <LiveSearch
-        placeholder="Search Profile"
         // results={results}
+        placeholder="Search Profile"
         results={profiles}
         value={profile.name}
         onChange={handleProfileChange}
@@ -80,12 +79,12 @@ const CastForm = ({ onSubmit }) => {
       </span>
       <div className="flex-gow">
         <Input
+          type="text"
           placeholder="Role as"
           name="roleAs"
+          className={`${commonInputClasses}  rounded p-1 text-lg border-2`}
           value={roleAs}
           onChange={handleOnChange}
-          type="text"
-          className={`${commonInputClasses}  rounded p-1 text-lg border-2`}
         />
       </div>
       <Btn
