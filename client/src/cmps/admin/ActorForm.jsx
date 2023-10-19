@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import Btn from "../global/Btn";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { ImSpinner3 } from "react-icons/im";
 import { useNotification } from "../../hooks";
 import { commonInputClasses } from "../../utils/theme";
-import { Form } from "react-router-dom";
 import PosterSelector from "./PosterSelcetor";
 import Input from "../form/Input";
 import Selector from "../global/Selector";
@@ -31,7 +30,7 @@ const validateActor = ({ avatar, name, about, gender }) => {
     return { error: null };
 };
 
-const ActorForm = ({ busy, onSubmit, title, btnTitle }) => {
+const ActorForm = ({ busy, onSubmit, title, btnTitle,initialState }) => {
   const [actorInfo, setActorInfo] = useState({ ...defaultActorInfo });
   const [selectedAvatarForUI, setSelectedAvatarForUI] = useState("");
   const { updateNotification } = useNotification();
@@ -60,6 +59,13 @@ const ActorForm = ({ busy, onSubmit, title, btnTitle }) => {
     onSubmit(formData);
   };
   const { name, about, gender } = actorInfo;
+
+  useEffect(()=>{
+    if(initialState){
+      setActorInfo({...initialState,avatar:null})
+      setSelectedAvatarForUI(initialState.avatar)
+    }
+  },[initialState])
   return (
     <form
       className="dark:bg-primary bg-white p-3 w-[35rem] rounded"

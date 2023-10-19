@@ -1,7 +1,6 @@
-
 import { useEffect, useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
-import { Btn, NextAndPrevBtn } from "..";
+import { Btn, NextAndPrevBtn, UpdateActor } from "..";
 import { useNotification, useSearch } from "../../hooks";
 import { get_actors } from "../../api/actor";
 
@@ -37,6 +36,8 @@ const Actors = () => {
   const [actors, setActors] = useState([]);
   const [results, setResults] = useState([]);
   const [reachedToEnd, setReachedToEnd] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
 
   const { handleSearch, resetSearch, resultNotFound } = useSearch();
   const { updateNotification } = useNotification();
@@ -58,18 +59,44 @@ const Actors = () => {
     setActors([...profiles]);
   };
 
-  const handleOnNextClick=()=>{
-    if(reachedToEnd) return;
-    currentPageNo +=1;
-    get_all_actors(currentPageNo)
-  }
-  const handleOnPrevClick=()=>{
-    if(currentPageNo<=0) return;
-    if(reachedToEnd) setReachedToEnd(false)
+  const handleOnNextClick = () => {
+    if (reachedToEnd) return;
+    currentPageNo += 1;
+    get_all_actors(currentPageNo);
+  };
+  const handleOnPrevClick = () => {
+    if (currentPageNo <= 0) return;
+    if (reachedToEnd) setReachedToEnd(false);
 
-    currentPageNo -=1;
-    get_all_actors(currentPageNo)
+    currentPageNo -= 1;
+    get_all_actors(currentPageNo);
+  };
 
+  const handleOnDeleteClick = (profile) => {
+    // console.log(profile);
+    setShowUpdateModal(true);
+    setSelectedProfile(profile);
+  };
+
+  const handleOnEditClick = (profile) => {
+    console.log(profile);
+    setShowUpdateModal(true);
+    setSelectedProfile(profile);
+  };
+
+  const hideUpdateModal = () => {
+    setShowUpdateModal(false);
+  };
+
+  const handleOnActorUpdate=(profile)=>{
+    const updatedActors= actors.map(actor=>{
+      if(profile.id===actor.id){
+        return profile;
+      }
+      return actor;
+    })
+
+    setActors([...updatedActors]);
   }
   useEffect(() => {
     get_all_actors(currentPageNo);
@@ -78,12 +105,28 @@ const Actors = () => {
     <>
       <div className="p-5">
         <div className="grid grid-cols-4 gap-5">
-          {actors.map((e, i) => (
-            <ActorProfile profile={e} key={i} />
+          {actors.map((actor, i) => (
+            <ActorProfile
+              profile={actor}
+              key={i}
+              onDeleteClick={() => handleOnDeleteClick(actor)}
+              onEditClick={() => handleOnEditClick(actor)}
+            />
           ))}
         </div>
       </div>
-      <NextAndPrevBtn className="mt-5" reachLimit={reachedToEnd}    onNextClick={handleOnNextClick}   onPrevClick={handleOnPrevClick}/>
+      <NextAndPrevBtn
+        className="mt-5"
+        reachLimit={reachedToEnd}
+        onNextClick={handleOnNextClick}
+        onPrevClick={handleOnPrevClick}
+      />
+      <UpdateActor
+        visible={showUpdateModal}
+        onClose={hideUpdateModal}
+        initialState={selectedProfile}
+        onSuccess={handleOnActorUpdate}
+      />
     </>
   );
 };
