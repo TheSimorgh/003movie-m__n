@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { BsTrash, BsPencilSquare, BsBoxArrowUpRight } from "react-icons/bs";
 import { useNotification } from "../../../hooks";
-import { delete_movie } from "../../../../../server/src/ctrl/movie";
-import {Btn} from "../cmps"
+
+import Btn from "../../global/Btn";
+import { delete_movie } from "../../../api/movie";
+
 const MovieListItem = ({ movie }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);

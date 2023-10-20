@@ -24,7 +24,7 @@ export const create_actor =async(formData)=>{
 export const update_actor=async(id,formData)=>{
     const token=getToken()
     try {
-        const {data} =await client('/actor/update/'+id,formData,{
+        const {data} =await client.put('/actor/update/'+id,formData,{
             headers:{
                 authorization:"Bearer "+token,
                 "content-type": "multipart/form-data",
@@ -39,7 +39,7 @@ export const update_actor=async(id,formData)=>{
 export const delete_actor=async(id)=>{
     const token=getToken()
     try {
-        const {data} =await client('/actor/'+id,{
+        const {data} =await client.delete('/actor/'+id,{
             headers:{
                 authorization:"Bearer "+token,
                 "content-type": "multipart/form-data",
@@ -54,7 +54,7 @@ export const delete_actor=async(id)=>{
 export const get_actors=async(pageNo,limit)=>{
     const token = getToken();
     try {
-        const {data}=await client(`/actor/actors?pageNo=${pageNo}&limit=${limit}`,
+        const {data}=await client(`/actor/all/actors?pageNo=${pageNo}&limit=${limit}`,
         
         {headers:{authorization:"Bearer "+token,
         "content-type":"multipart/form-data"

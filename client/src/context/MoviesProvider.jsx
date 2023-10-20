@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import { createContext, useState } from "react";
-import { get_all_movies, get_movies } from "../api/movie";
+import {  get_movies } from "../api/movie";
 import { useNotification } from "../hooks";
 
 export const MovieContext = createContext();

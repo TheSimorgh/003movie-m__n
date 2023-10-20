@@ -6,12 +6,12 @@ import {
   get_movies,
   update_movie,
 } from "../../api/movie";
-import { NextAndPrevBtn, MovieListItem } from "../../cmps";
+import { NextAndPrevBtn, MovieListItem } from "..";
 import { useNotification } from "../../hooks";
 import { useMovies } from "../../hooks";
 const limit = 10;
 let currentPageNo = 0;
-const Movies = () => {
+const MoviesCmp = () => {
   const { updateNotification } = useNotification();
   const {
     movies: newMovies,
@@ -32,11 +32,11 @@ const Movies = () => {
         {newMovies.map((movie,i)=>(
           <MovieListItem key={movie.id}  movie={movie} />
         ))}
-        <NextAndPrevBtn className="mt-5" onNextClick={fetch_latest_movies} onPrevClick={fetch_prev_page} />
+         <NextAndPrevBtn className="mt-5" onNextClick={fetch_latest_movies} onPrevClick={fetch_prev_page} /> 
         
       </div>;
     </>
   );
 };
 
-export default Movies;
+export default MoviesCmp;

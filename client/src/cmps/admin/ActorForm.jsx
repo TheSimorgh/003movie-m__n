@@ -25,7 +25,7 @@ const validateActor = ({ avatar, name, about, gender }) => {
   if (!about.trim()) return { error: "About section is empty!" };
   if (!gender.trim()) return { error: "Actor gender is missing!" };
 
-  if (!avatar && !avatar.type?.startsWith("image"))
+  if (avatar && !avatar.type?.startsWith("image"))
     return { error: "Invalid image / avatar file!" };
     return { error: null };
 };

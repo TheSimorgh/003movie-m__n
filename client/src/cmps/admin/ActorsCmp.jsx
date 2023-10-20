@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
-import { Btn, NextAndPrevBtn, UpdateActor } from "..";
+import { Btn, NextAndPrevBtn, NotFoundText, SearchFormAdm, UpdateActor } from "..";
 import { useNotification, useSearch } from "../../hooks";
-import { get_actors } from "../../api/actor";
+import { delete_actor, get_actors, search_actor } from "../../api/actor";
 
 // const results = [
 //   {
@@ -32,53 +33,48 @@ import { get_actors } from "../../api/actor";
 // ];
 let currentPageNo = 0;
 const limit = 20;
-const Actors = () => {
+
+
+const  ActorsCmp=()=> {
   const [actors, setActors] = useState([]);
   const [results, setResults] = useState([]);
   const [reachedToEnd, setReachedToEnd] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+
   const [selectedProfile, setSelectedProfile] = useState(null);
-
-  const { handleSearch, resetSearch, resultNotFound } = useSearch();
   const { updateNotification } = useNotification();
+  const { handleSearch, resetSearch, resultNotFound } = useSearch();
 
-  const handleOnEditClick = (profile) => {
-    console.log(profile);
-  };
-  const handleOnDeleteClick = (profile) => {
-    console.log(profile);
-  };
-
-  const get_all_actors = async (pageNo) => {
+  const fetchActors = async (pageNo) => {
     const { profiles, error } = await get_actors(pageNo, limit);
     if (error) return updateNotification("error", error);
+
     if (!profiles.length) {
       currentPageNo = pageNo - 1;
       return setReachedToEnd(true);
     }
+
     setActors([...profiles]);
   };
 
   const handleOnNextClick = () => {
     if (reachedToEnd) return;
     currentPageNo += 1;
-    get_all_actors(currentPageNo);
+    fetchActors(currentPageNo);
   };
+
   const handleOnPrevClick = () => {
     if (currentPageNo <= 0) return;
     if (reachedToEnd) setReachedToEnd(false);
 
     currentPageNo -= 1;
-    get_all_actors(currentPageNo);
-  };
-
-  const handleOnDeleteClick = (profile) => {
-    // console.log(profile);
-    setShowUpdateModal(true);
-    setSelectedProfile(profile);
+    fetchActors(currentPageNo);
   };
 
   const handleOnEditClick = (profile) => {
+    console.log("handleOnActorUpdate");
+
     console.log(profile);
     setShowUpdateModal(true);
     setSelectedProfile(profile);
@@ -88,39 +84,82 @@ const Actors = () => {
     setShowUpdateModal(false);
   };
 
-  const handleOnActorUpdate=(profile)=>{
-    const updatedActors= actors.map(actor=>{
-      if(profile.id===actor.id){
+  const handleOnSearchSubmit = (value) => {
+    handleSearch(search_actor, value, setResults);
+  };
+
+  const handleSearchFormReset = () => {
+    resetSearch();
+    setResults([]);
+  };
+
+  const handleOnActorUpdate = (profile) => {
+
+    const updatedActors = actors.map((actor) => {
+      if (profile.id === actor.id) {
         return profile;
       }
+
       return actor;
-    })
+    });
 
     setActors([...updatedActors]);
-  }
+  };
+
+  const handleOnDeleteClick = (profile) => {
+    setSelectedProfile(profile);
+  
+  };
+
+
+
   useEffect(() => {
-    get_all_actors(currentPageNo);
+    fetchActors(currentPageNo);
   }, []);
+
   return (
     <>
       <div className="p-5">
-        <div className="grid grid-cols-4 gap-5">
-          {actors.map((actor, i) => (
-            <ActorProfile
-              profile={actor}
-              key={i}
-              onDeleteClick={() => handleOnDeleteClick(actor)}
-              onEditClick={() => handleOnEditClick(actor)}
-            />
-          ))}
+        <div className="flex justify-end mb-5">
+          <SearchFormAdm
+            onReset={handleSearchFormReset}
+            onSubmit={handleOnSearchSubmit}
+            placeholder="Search Actors..."
+            showResetIcon={results.length || resultNotFound}
+          />
         </div>
+        <NotFoundText visible={resultNotFound} text="Record not found" />
+
+        <div className="grid grid-cols-4 gap-5">
+          {results.length || resultNotFound
+            ? results.map((actor) => (
+                <ActorProfile
+                  profile={actor}
+                  key={actor.id}
+                  onEditClick={() => handleOnEditClick(actor)}
+                  onDeleteClick={() => handleOnDeleteClick(actor)}
+                />
+              ))
+            : actors.map((actor) => (
+                <ActorProfile
+                  profile={actor}
+                  key={actor.id}
+                  onEditClick={() => handleOnEditClick(actor)}
+                  onDeleteClick={() => handleOnDeleteClick(actor)}
+                />
+              ))}
+        </div>
+
+        {!results.length && !resultNotFound ? (
+          <NextAndPrevBtn
+            className="mt-5"
+            onNextClick={handleOnNextClick}
+            onPrevClick={handleOnPrevClick}
+          />
+        ) : null}
       </div>
-      <NextAndPrevBtn
-        className="mt-5"
-        reachLimit={reachedToEnd}
-        onNextClick={handleOnNextClick}
-        onPrevClick={handleOnPrevClick}
-      />
+
+
       <UpdateActor
         visible={showUpdateModal}
         onClose={hideUpdateModal}
@@ -129,13 +168,10 @@ const Actors = () => {
       />
     </>
   );
-};
-
-export default Actors;
-
-const ActorProfile = ({ profile }) => {
+}
+export default ActorsCmp;
+const ActorProfile = ({ profile, onEditClick, onDeleteClick }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const { name, about = "", avatar } = profile;
   const acceptedNameLength = 15;
 
   const handleOnMouseEnter = () => {
@@ -148,16 +184,19 @@ const ActorProfile = ({ profile }) => {
 
   const getName = (name) => {
     if (name.length <= acceptedNameLength) return name;
-    return name.subsring(0, acceptedNameLength) + "..";
+
+    return name.substring(0, acceptedNameLength) + "..";
   };
+
+  const { name, about = "", avatar } = profile;
 
   if (!profile) return null;
 
   return (
     <div className="bg-white shadow dark:shadow dark:bg-secondary rounded h-20 overflow-hidden">
       <div
-        onMouseOver={handleOnMouseEnter}
-        onMouseOut={handleOnMouseLeave}
+        onMouseEnter={handleOnMouseEnter}
+        onMouseLeave={handleOnMouseLeave}
         className="flex cursor-pointer relative"
       >
         <img
@@ -165,6 +204,7 @@ const ActorProfile = ({ profile }) => {
           alt={name}
           className="w-20 aspect-square object-cover"
         />
+
         <div className="px-2">
           <h1 className="text-xl text-primary dark:text-white font-semibold whitespace-nowrap">
             {getName(name)}
@@ -183,25 +223,25 @@ const ActorProfile = ({ profile }) => {
   );
 };
 
-const Options = (visible, onDeleteClick, onEditClick) => {
+const Options = ({ visible, onDeleteClick, onEditClick }) => {
   if (!visible) return null;
+
   return (
     <div className="absolute inset-0 bg-primary bg-opacity-25 backdrop-blur-sm flex justify-center items-center space-x-5">
-      <Btn
+      <button
         onClick={onDeleteClick}
         className="p-2 rounded-full bg-white text-primary hover:opacity-80 transition"
         type="button"
       >
         <BsTrash />
-      </Btn>
-
-      <Btn
+      </button>
+      <button
         onClick={onEditClick}
         className="p-2 rounded-full bg-white text-primary hover:opacity-80 transition"
         type="button"
       >
         <BsPencilSquare />
-      </Btn>
+      </button>
     </div>
   );
 };

@@ -22,8 +22,8 @@ export {default as AppInfoBox} from"./admin/cmps/AppInfoBox"
 export {default as MovieListItem} from"./admin/cmps/MovieListItem"
 export {default as LatestUploads} from"./admin/cmps/LatestUploads"
 export {default as MostRatedMovies} from"./admin/cmps/MostRatedMovies"
-export {default as Actors} from"./admin//Actors"
-export {default as Movies} from"./admin/Movies"
+export {default as ActorsCmp} from"./admin/ActorsCmp"
+export {default as MoviesCmp} from"./admin/MoviesCmp"
 
 
 export {default as ActorCreateModal} from"./admin/modals/ActorCreateModal"
@@ -54,6 +54,9 @@ export {default as LiveSearch} from "./global/LiveSearch";
 export {default as TagsInput} from "./global/TagsInput";
 export {default as ViewAll_Btn} from "./global/ViewAll_Btn";
 export {default as Btn} from "./global/Btn";
+export {default as NotFoundText} from "./global/NotFoundText";
+
+
 
 export {default as CastModal} from "./modals/CastModal";
 export {default as GenresModal} from "./modals/GenresModal";

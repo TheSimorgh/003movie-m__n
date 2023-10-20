@@ -75,7 +75,7 @@ export const get_movies = async (pageNo, limit) => {
   const token = getToken();
   try {
     const { data } = await client(
-      `/movie/movies`,
+      `/movie/movies?pageNo=${pageNo}&limit=${limit}`,
       {},
       {
         headers: {
