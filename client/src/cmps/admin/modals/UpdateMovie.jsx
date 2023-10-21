@@ -1,10 +1,12 @@
 import React from 'react'
-
-const UpdateMovie = () => {
+import ModalContainer from '../../global/ModalContainer'
+import MovieForm from "../MovieForm";
+const UpdateMovie = ({visible}) => {
   return (
-    <div>
-      
-    </div>
+   <ModalContainer visible={visible}  >
+      <MovieForm />
+
+   </ModalContainer>
   )
 }
 

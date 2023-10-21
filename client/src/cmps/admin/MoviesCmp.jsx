@@ -6,12 +6,20 @@ import {
   get_movies,
   update_movie,
 } from "../../api/movie";
-import { NextAndPrevBtn, MovieListItem, SearchFormAdm, NotFoundText } from "..";
+import {
+  NextAndPrevBtn,
+  MovieListItem,
+  SearchFormAdm,
+  NotFoundText,
+  ConfirmModal,
+  UpdateMovie,
+} from "..";
 import { useNotification } from "../../hooks";
 import { useMovies } from "../../hooks";
 const limit = 10;
 let currentPageNo = 0;
 const MoviesCmp = () => {
+  const {selectedMovie,setSelectedMovie}=useState(null)
   const { updateNotification } = useNotification();
   const {
     movies: newMovies,
@@ -25,6 +33,7 @@ const MoviesCmp = () => {
     handleOnSearchSubmit,
     handleSearchFormReset,
   } = useMovies();
+
 
   useEffect(() => {
     fetch_movies(currentPageNo);
@@ -44,10 +53,10 @@ const MoviesCmp = () => {
         <div>
           {searchResults?.length || resultNotFound
             ? searchResults.map((movie) => (
-                <MovieListItem key={movie.id} movie={movie} />
+                <MovieListItem key={movie.id} movie={movie} onDeleteClick={()=>handleOnDeleteClick(movie)} onEditClick={()=>handleOnEditClick(movie)}/>
               ))
             : newMovies.map((movie) => (
-                <MovieListItem key={movie.id} movie={movie} />
+              <MovieListItem key={movie.id} movie={movie} onDeleteClick={()=>handleOnDeleteClick(movie)} onEditClick={()=>handleOnEditClick(movie)}/>
               ))}
         </div>
 
@@ -59,7 +68,7 @@ const MoviesCmp = () => {
           />
         ) : null}
       </div>
-      
+
     </>
   );
 };

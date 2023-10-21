@@ -251,20 +251,20 @@ const Options = ({ visible, onDeleteClick, onEditClick }) => {
 
   return (
     <div className="absolute inset-0 bg-primary bg-opacity-25 backdrop-blur-sm flex justify-center items-center space-x-5">
-      <button
+      <Btn
         onClick={onDeleteClick}
         className="p-2 rounded-full bg-white text-primary hover:opacity-80 transition"
         type="button"
       >
         <BsTrash />
-      </button>
-      <button
+      </Btn>
+      <Btn
         onClick={onEditClick}
         className="p-2 rounded-full bg-white text-primary hover:opacity-80 transition"
         type="button"
       >
         <BsPencilSquare />
-      </button>
+      </Btn>
     </div>
   );
 };

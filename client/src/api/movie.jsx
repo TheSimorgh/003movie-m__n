@@ -49,6 +49,21 @@ export const update_movie = async (id, formData) => {
     return catchError(error);
   }
 };
+
+export const get_movie_for_update = async (id) => {
+  const token = getToken();
+  try {
+    const { data } = await client("/movie/for-update/" + id, {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
 export const delete_movie = async (id) => {
   const token = getToken();
   try {
@@ -76,7 +91,7 @@ export const get_movies = async (pageNo, limit) => {
   try {
     const { data } = await client(
       `/movie/movies?pageNo=${pageNo}&limit=${limit}`,
-      
+
       {
         headers: {
           authorization: "Bearer " + token,
@@ -99,21 +114,19 @@ export const get_all_movies = async (pageNo, limit) => {
   }
 };
 
-
-export const search_movie=async(query)=>{
-  const token=getToken()
+export const search_movie = async (query) => {
+  const token = getToken();
   try {
-      const {data} = await client(`/movie/search_movie?title=${query}`,{
-          headers:{
-              authorization:"Bearer "+token,
-          },
-      });
-      return data;
+    const { data } = await client(`/movie/search_movie?title=${query}`, {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    });
+    return data;
   } catch (error) {
-      return catchError(error);
-
+    return catchError(error);
   }
-}
+};
 export const xx = async () => {
   try {
     1;
