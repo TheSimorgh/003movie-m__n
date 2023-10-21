@@ -1,7 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
-import { Btn, NextAndPrevBtn, NotFoundText, SearchFormAdm, UpdateActor } from "..";
+import {
+  Btn,
+  ConfirmModal,
+  NextAndPrevBtn,
+  NotFoundText,
+  SearchFormAdm,
+  UpdateActor,
+} from "..";
 import { useNotification, useSearch } from "../../hooks";
 import { delete_actor, get_actors, search_actor } from "../../api/actor";
 
@@ -34,13 +41,13 @@ import { delete_actor, get_actors, search_actor } from "../../api/actor";
 let currentPageNo = 0;
 const limit = 20;
 
-
-const  ActorsCmp=()=> {
+const ActorsCmp = () => {
   const [actors, setActors] = useState([]);
   const [results, setResults] = useState([]);
   const [reachedToEnd, setReachedToEnd] = useState(false);
   const [busy, setBusy] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const [selectedProfile, setSelectedProfile] = useState(null);
   const { updateNotification } = useNotification();
@@ -94,7 +101,6 @@ const  ActorsCmp=()=> {
   };
 
   const handleOnActorUpdate = (profile) => {
-
     const updatedActors = actors.map((actor) => {
       if (profile.id === actor.id) {
         return profile;
@@ -108,10 +114,20 @@ const  ActorsCmp=()=> {
 
   const handleOnDeleteClick = (profile) => {
     setSelectedProfile(profile);
-  
+    setShowConfirmModal(true);
   };
 
+  const handleOnDeleteConfirm = async () => {
+    setBusy(true);
+    const { error, message } = await delete_actor(selectedProfile.id);
+    setBusy(false);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    hideConfirmModal();
+    fetchActors(currentPageNo);
+  };
 
+  const hideConfirmModal = () => setShowConfirmModal(false);
 
   useEffect(() => {
     fetchActors(currentPageNo);
@@ -159,16 +175,23 @@ const  ActorsCmp=()=> {
         ) : null}
       </div>
 
-
       <UpdateActor
         visible={showUpdateModal}
         onClose={hideUpdateModal}
         initialState={selectedProfile}
         onSuccess={handleOnActorUpdate}
       />
+      <ConfirmModal
+        title="Are you sure?"
+        subtitle="This action will remove this profile permanently!"
+        busy={busy}
+        onConfirm={handleOnDeleteConfirm}
+        onCancel={hideConfirmModal}
+        visible={showConfirmModal}
+      />
     </>
   );
-}
+};
 export default ActorsCmp;
 const ActorProfile = ({ profile, onEditClick, onDeleteClick }) => {
   const [showOptions, setShowOptions] = useState(false);

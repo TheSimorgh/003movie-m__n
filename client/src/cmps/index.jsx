@@ -30,6 +30,7 @@ export {default as ActorCreateModal} from"./admin/modals/ActorCreateModal"
 export {default as MovieUploadModal} from"./admin/modals/MovieUploadModal"
 export {default as UpdateActor } from"./admin/modals/UpdateActor"
 export {default as UpdateMovie} from"./admin/modals/UpdateMovie"
+export {default as ConfirmModal} from"./admin/modals/ConfirmModal"
 
 
 export {default as NavSearchForm} from "./form/NavSearchForm";

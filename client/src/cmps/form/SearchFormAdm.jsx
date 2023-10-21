@@ -10,42 +10,41 @@ const defaultInputStyle =
 
 const SearchFormAdm = ({
   placeholder,
-   showResetIcon,
+  showResetIcon,
   inputClassName = defaultInputStyle,
   onSubmit,
   onReset,
 }) => {
   const [value, setValue] = useState("");
 
-  const handleOnSubmit = () => {};
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(value);
+  };
   const handleReset = () => {
     setValue("");
-    // onReset();
+    onReset();
   };
   // const showResetIcon=true
   return (
     <form className="relative" onSubmit={handleOnSubmit}>
-    
-      
-    <Input 
+      <Input
         type="text"
         className={
-          "border-2 transition bg-transparent rounded p-1 outline-none "
-          //  + inputClassName
+          "border-2 transition bg-transparent rounded p-1 outline-none " +
+          inputClassName
         }
         placeholder={placeholder}
         value={value}
         onChange={({ target }) => setValue(target.value)}
-      
       />
       {showResetIcon ? (
-        
         <Btn
           onClick={handleReset}
           type="button"
           className="absolute top-1/2 -translate-y-1/2 right-2 text-secondary dark:text-white"
         >
-          {value.length ?        <AiOutlineClose /> :null}
+          {value.length ? <AiOutlineClose /> : null}
         </Btn>
       ) : null}
     </form>
