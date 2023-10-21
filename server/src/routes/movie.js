@@ -1,6 +1,6 @@
 const express = require("express");
 const { isAdmin, isAuth } = require("../midd/auth");
-const { upload_trailer, create_movie, update_movie_without_poster, update_movie, delete_movie, get_movies, get_movie_update, search_movies, get_latest_uploads, get_single_movie, get_related_movies, get_top_rated_movies, search_public_movies, all_movies } = require("../ctrl/movie");
+const { upload_trailer, create_movie, update_movie_without_poster, update_movie, delete_movie, get_movies,  search_movies, get_latest_uploads, get_single_movie, get_related_movies, get_top_rated_movies, search_public_movies, all_movies, search_movie, get_movie_for_update } = require("../ctrl/movie");
 const { uploadVideo, uploadImage } = require("../midd/multer");
 const { parseData } = require("../utils/helpers");
 const { validate_movie, validate, validate_trailer } = require("../midd/validator");
@@ -24,7 +24,7 @@ validate_movie,
 validate,update_movie)
 router.delete("/delete/:movieId",isAuth, isAdmin,delete_movie)
 router.get("/movies",isAuth, isAdmin,get_movies)
-router.get("/for-update/:movieId",get_movie_update)
+router.get("/for-update/:movieId",get_movie_for_update)
 router.get("/search",search_movies)
 
 
@@ -35,6 +35,7 @@ router.get("/single/:movieId",get_single_movie)
 router.get("/related/:movieId",get_related_movies)
 router.get("/top_rated",get_top_rated_movies)
 router.get("/search_public",search_public_movies)
+router.get("/search_movie",search_movie)
 router.get("/all",all_movies)
 
 

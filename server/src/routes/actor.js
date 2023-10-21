@@ -8,7 +8,7 @@ router.get("/",(req,res)=>{console.log("1")} );
 
 
 
-router.get("/all",isAuth,isAdmin, all_actor)
+router.get("/all/actors",isAuth,isAdmin, all_actor)
 router.get("/single/:id", single_actor)
 router.post("/create",isAuth,isAdmin, uploadImage.single("avatar"), validate_actor_info,validate, create_actor)
 router.put("/update/:actorId",isAuth,isAdmin, uploadImage.single("avatar"),update_actor)

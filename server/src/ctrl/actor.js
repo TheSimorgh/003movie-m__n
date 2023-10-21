@@ -6,16 +6,20 @@ const {
   formatActor,
 } = require("../utils/helpers");
 const cloud = require("../config/cloud");
+
+
+
 exports.all_actor = async (req, res) => {
   const { pageNo, limit } = req.query;
 
-  const actors = await Actor.find();
-  // .sort({createdAt:-1})
-  // .skip(parseInt(pageNo)*parseInt(limit))
-  // .limit(parseInt(limit));
+  const actors = await Actor.find()
+  .sort({createdAt:-1})
+  .skip(parseInt(pageNo)*parseInt(limit))
+  .limit(parseInt(limit));
 
+  const profiles = actors.map((actor) => formatActor(actor));
   res.json({
-    actors,
+    profiles,
   });
 };
 
