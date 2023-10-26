@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import  { useEffect, useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
-import { useNotification, useSearch } from "../../hooks";
+import { useMovies, useNotification, useSearch } from "../../hooks";
 import {
   TagsInput,
   Label,
@@ -19,6 +20,7 @@ import {
   WritersModal,
   Selector,
   WriterSelector,
+  Btn,
 } from "../../cmps";
 import {
   typeOptions,
@@ -90,23 +92,25 @@ const defaultMovieInfo = {
   status: "",
 };
 export const img_accept_files = "image/jpg, image/jpeg, image/png";
-const MovieForm = ({ busy, onSubmit }) => {
+
+const MovieForm = ({ busy, onSubmit,btnTitle }) => {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [selectedPosterForUI, setSelectedPosterForUI] = useState("");
   const [showWritersModal, setShowWritersModal] = useState(false);
   const [showGenresModal, setShowGenresModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
+  
 
   // const [directorsProfile,setDirectorsProfile]=useState([])
   // const [writersProfile,setWritersProfile]=useState([])
   // const [writerName,setWriterName]=useState("")
-
+  const {selectedMovie:initialState}=useMovies()
   const { updateNotification } = useNotification();
   const { handleSearch } = useSearch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(movieInfo);
+    // console.log(movieInfo);
     const { error } = validatorMovie(movieInfo);
     if (error) return updateNotification("error", error);
     // cast, tags, genres, writers
@@ -158,6 +162,8 @@ const MovieForm = ({ busy, onSubmit }) => {
     }
     onSubmit(formData);
   };
+
+  
   const updatePosterForUI = (file) => {
     const url = URL.createObjectURL(file);
     return setSelectedPosterForUI(url);
@@ -288,6 +294,19 @@ const MovieForm = ({ busy, onSubmit }) => {
   //   }
 
   // }
+
+ console.log("MovieForm 1st");
+ console.log(initialState);
+  useEffect(()=>{
+    if(initialState){
+      setMovieInfo({...initialState, releseDate: initialState.releseDate.split("T")[0],poster:null})
+      setSelectedPosterForUI(initialState.poster);
+  
+    }
+    console.log("MovieForm in UseEffect");
+    console.log(initialState);
+
+  },[initialState])
   return (
     <>
       <div onSubmit={handleSubmit} className="flex space-x-3">
@@ -307,14 +326,15 @@ const MovieForm = ({ busy, onSubmit }) => {
           </div>
           <div>
             <Label htmlFor="storyLine">Story line</Label>
-            <textarea
+            <Input
+            textarea
               value={storyLine}
               onChange={handleChange}
               name="storyLine"
               id="storyLine"
               className={commonInputClasses + " border-b-2 resize-none h-24"}
               placeholder="Movie storyline..."
-            ></textarea>
+            ></Input>
           </div>
 
           <div>
@@ -411,7 +431,7 @@ const MovieForm = ({ busy, onSubmit }) => {
           <Submit_Btn
             type="button"
             busy={busy}
-            value={"Upload"}
+            value={btnTitle ? btnTitle :"Submit"}
             onClick={handleSubmit}
           />
         </div>
@@ -449,7 +469,9 @@ const MovieForm = ({ busy, onSubmit }) => {
             options={statusOptions}
             label="Status"
           />
+            
         </div>
+        
       </div>
       <WritersModal
         visible={showWritersModal}
@@ -474,6 +496,7 @@ const MovieForm = ({ busy, onSubmit }) => {
         onClose={hideGenresModal}
         onClick={showGenresModal}
       />
+   
     </>
   );
 };

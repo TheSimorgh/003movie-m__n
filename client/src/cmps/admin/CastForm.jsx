@@ -44,9 +44,9 @@ const CastForm = ({ onSubmit }) => {
   const handleSubmit = () => {
     console.log(castInfo);
     const { profile, roleAs } = castInfo;
-    if (!profile?.name)
+    if (!profile.name)
       return updateNotification("error", "Cast profile is missing");
-    if (!roleAs?.trim())
+    if (!roleAs.trim())
       return updateNotification("error", "Cast role is missing!");
     onSubmit(castInfo);
     setCastInfo({ ...defaultCastInfo, profile: { name: "" } });

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   delete_movie,
   get_all_movies,
+  get_movie_for_update,
   get_movies,
   update_movie,
 } from "../../api/movie";
@@ -19,10 +20,14 @@ import { useMovies } from "../../hooks";
 const limit = 10;
 let currentPageNo = 0;
 const MoviesCmp = () => {
-  const {selectedMovie,setSelectedMovie}=useState(null)
+  // const [busy, setBusy] = useState(false);
+  // const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { updateNotification } = useNotification();
+
   const {
-    movies: newMovies,
+    movies,    setMovies,
     latestUploads,
     fetch_latest_movies,
     fetch_movies,
@@ -32,12 +37,65 @@ const MoviesCmp = () => {
     searchResults,
     handleOnSearchSubmit,
     handleSearchFormReset,
+    // setInfo,
+    // info,
+ 
+    //  handleOnDeleteClick,
+    // handleOnEditClick,
+
+  //   busy, setBusy,
+    selectedMovie,
+   setSelectedMovie,
+  //   showUpdateModal,
+  //   showConfirmModal,
+  //   displayUpdateModal,
+  //   displayConfirmModal,
+  //   hideUpdateModal,
+  //   hideConfirmModal,
   } = useMovies();
+
+  const displayUpdateModal = () => setShowUpdateModal(true);
+  const displayConfirmModal = () => setShowConfirmModal(true);
+  const hideUpdateModal = () => setShowUpdateModal(false);
+  const hideConfirmModal = () => setShowConfirmModal(false);
+
+  const handleOnEditClick = async (movie) => {
+    const { result, error } = await get_movie_for_update(movie.id);
+    if (error) updateNotification("error", error);
+    setSelectedMovie(result);
+    displayUpdateModal();
+    // setBusy(prev=>!prev)
+    // console.log("Info");
+    // console.log(info);
+
+    // setInfo(prev=>!prev)
+    // console.log("Info");
+    // console.log(info);
+  };
+
+  const handleOnDeleteClick = async (movie) => {
+    console.log(movie);
+  };
+  // console.log(selectedMovie);
+
+  const handleOnUpdate = (movie) => {
+    const updatedMovies = movies.map((m) => {
+      if (m.id === movie.id) return movie;
+      return m;
+    });
+
+    setMovies([...updatedMovies]);
+  };
 
 
   useEffect(() => {
     fetch_movies(currentPageNo);
-  });
+  }, []);
+  // useEffect(() => {
+  //   console.log("useEffect");
+  //   console.log(selectedMovie);
+
+  // }, [selectedMovie]);
   return (
     <>
       <div className="space-y-3 p-5  ">
@@ -53,10 +111,24 @@ const MoviesCmp = () => {
         <div>
           {searchResults?.length || resultNotFound
             ? searchResults.map((movie) => (
-                <MovieListItem key={movie.id} movie={movie} onDeleteClick={()=>handleOnDeleteClick(movie)} onEditClick={()=>handleOnEditClick(movie)}/>
+                <MovieListItem
+                  key={movie.id}
+                  movie={movie}
+                  onDeleteClick={() => handleOnDeleteClick(movie)}
+                  onEditClick={() => handleOnEditClick(movie)}
+                  initialState={selectedMovie}
+                  visibleUpdateModal={showUpdateModal}
+                />
               ))
-            : newMovies.map((movie) => (
-              <MovieListItem key={movie.id} movie={movie} onDeleteClick={()=>handleOnDeleteClick(movie)} onEditClick={()=>handleOnEditClick(movie)}/>
+            : movies.map((movie) => (
+                <MovieListItem
+                  key={movie.id}
+                  movie={movie}
+                  onDeleteClick={() => handleOnDeleteClick(movie)}
+                  onEditClick={() => handleOnEditClick(movie)}
+                  initialState={selectedMovie}
+                  visibleUpdateModal={showUpdateModal}
+                />
               ))}
         </div>
 
@@ -68,7 +140,22 @@ const MoviesCmp = () => {
           />
         ) : null}
       </div>
-
+      <div className="p-0">
+        <UpdateMovie
+          visible={showUpdateModal}
+          //initialState={selectedMovie} if i sending the initial state  inside the child element is it is null or undefined to prevent tis i am calling selected movie inside the child cmp
+          onSuccess={handleOnUpdate}
+          onClose={hideUpdateModal}
+          // busy={busy}
+          // setBusy={setBusy}
+     
+        />
+        <ConfirmModal
+          visible={showConfirmModal}
+          title="Are you sure?"
+          subtitle="This action will remove this movie permanently!"
+        />
+      </div>
     </>
   );
 };

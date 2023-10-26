@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import client from "./client";
 import { getToken, catchError } from "../utils/helper";
 
@@ -44,6 +45,7 @@ export const update_movie = async (id, formData) => {
         "content-type": "multipart/form-data",
       },
     });
+    return data
   } catch (error) {
     console.log(error);
     return catchError(error);
@@ -90,9 +92,7 @@ export const get_movies = async (pageNo, limit) => {
   const token = getToken();
   try {
     const { data } = await client(
-      `/movie/movies?pageNo=${pageNo}&limit=${limit}`,
-
-      {
+      `/movie/movies?pageNo=${pageNo}&limit=${limit}`, {
         headers: {
           authorization: "Bearer " + token,
         },
