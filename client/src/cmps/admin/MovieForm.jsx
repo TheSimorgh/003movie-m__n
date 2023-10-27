@@ -299,7 +299,7 @@ const MovieForm = ({ busy, onSubmit,btnTitle }) => {
  console.log(initialState);
   useEffect(()=>{
     if(initialState){
-      setMovieInfo({...initialState, releseDate: initialState.releseDate.split("T")[0],poster:null})
+      setMovieInfo({...initialState, releseDate: initialState?.releseDate.split("T")[0],poster:null})
       setSelectedPosterForUI(initialState.poster);
   
     }
