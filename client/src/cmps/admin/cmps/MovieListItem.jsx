@@ -13,8 +13,8 @@ const MovieListItem = ({ movie,onEditClick,onDeleteClick}) => {
   // const [selectedMovie, setSelectedMovie] = useState(null);
 
   // const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [busy, setBusy] = useState(false);
+  // const [showConfirmModal, setShowConfirmModal] = useState(false);
+  // const [busy, setBusy] = useState(false);
   const { updateNotification } = useNotification();
 
   // const {
@@ -29,9 +29,9 @@ const MovieListItem = ({ movie,onEditClick,onDeleteClick}) => {
   // } = useMovies();
 
   // const displayUpdateModal = () => setShowUpdateModal(true);
-  const displayConfirmModal = () => setShowConfirmModal(true);
+  // const displayConfirmModal = () => setShowConfirmModal(true);
   // const hideUpdateModal = () => setShowUpdateModal(false);
-  const hideConfirmModal = () => setShowConfirmModal(false);
+  // const hideConfirmModal = () => setShowConfirmModal(false);
 
 
   console.log(movie?.id);
@@ -43,7 +43,7 @@ const MovieListItem = ({ movie,onEditClick,onDeleteClick}) => {
     <>
       <MovieCard
         movie={movie}
-        onDeleteClick={displayConfirmModal}
+        onDeleteClick={onDeleteClick}
         onEditClick={onEditClick}
       />
       {/* <div className="p-0">
@@ -101,15 +101,15 @@ const MovieCard = ({ movie, onDeleteClick, onEditClick, onOpenClick }) => {
 
           <td>
             <div className="flex items-center space-x-3 text-primary dark:text-white text-lg">
-              <Btn onClick={onDeleteClick} type="button" className="">
+              <button onClick={onDeleteClick} type="button" className="">
                 <BsTrash />
-              </Btn>
-              <Btn onClick={onEditClick} type="button" className="">
+              </button>
+              <button onClick={onEditClick} type="button" className="">
                 <BsPencilSquare />
-              </Btn>
-              <Btn onClick={onOpenClick} type="button" className="">
+              </button>
+              <button onClick={onOpenClick} type="button" className="">
                 <BsBoxArrowUpRight />
-              </Btn>
+              </button>
             </div>
           </td>
         </tr>

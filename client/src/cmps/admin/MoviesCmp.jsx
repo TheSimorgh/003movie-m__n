@@ -20,14 +20,15 @@ import { useMovies } from "../../hooks";
 const limit = 10;
 let currentPageNo = 0;
 const MoviesCmp = () => {
-  // const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(false);
   // const [selectedMovie, setSelectedMovie] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { updateNotification } = useNotification();
 
   const {
-    movies,    setMovies,
+    movies,
+    setMovies,
     latestUploads,
     fetch_latest_movies,
     fetch_movies,
@@ -39,19 +40,19 @@ const MoviesCmp = () => {
     handleSearchFormReset,
     // setInfo,
     // info,
- 
+
     //  handleOnDeleteClick,
     // handleOnEditClick,
 
-  //   busy, setBusy,
+    //   busy, setBusy,
     selectedMovie,
-   setSelectedMovie,
-  //   showUpdateModal,
-  //   showConfirmModal,
-  //   displayUpdateModal,
-  //   displayConfirmModal,
-  //   hideUpdateModal,
-  //   hideConfirmModal,
+    setSelectedMovie,
+    //   showUpdateModal,
+    //   showConfirmModal,
+    //   displayUpdateModal,
+    //   displayConfirmModal,
+    //   hideUpdateModal,
+    //   hideConfirmModal,
   } = useMovies();
 
   const displayUpdateModal = () => setShowUpdateModal(true);
@@ -73,8 +74,22 @@ const MoviesCmp = () => {
     // console.log(info);
   };
 
-  const handleOnDeleteClick = async (movie) => {
+  const handleOnDeleteConfirm = async () => {
+    setBusy(true);
+
+    const { error, message,del_movie } = await delete_movie(selectedMovie.id);
+
+    setBusy(false);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", `${message}`) ;
+    hideConfirmModal();
+    fetch_movies(currentPageNo);
+  };
+  const handleOnDeleteClick = (movie) => {
     console.log(movie);
+    setSelectedMovie(movie);
+    displayConfirmModal();
+    console.log(showConfirmModal);
   };
   // console.log(selectedMovie);
 
@@ -86,7 +101,6 @@ const MoviesCmp = () => {
 
     setMovies([...updatedMovies]);
   };
-
 
   useEffect(() => {
     fetch_movies(currentPageNo);
@@ -148,10 +162,12 @@ const MoviesCmp = () => {
           onClose={hideUpdateModal}
           // busy={busy}
           // setBusy={setBusy}
-     
         />
         <ConfirmModal
+          busy={busy}
           visible={showConfirmModal}
+          onClose={hideConfirmModal}
+          onConfirm={handleOnDeleteConfirm}
           title="Are you sure?"
           subtitle="This action will remove this movie permanently!"
         />

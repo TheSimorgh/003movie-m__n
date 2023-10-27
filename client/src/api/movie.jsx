@@ -69,7 +69,7 @@ export const get_movie_for_update = async (id) => {
 export const delete_movie = async (id) => {
   const token = getToken();
   try {
-    const { data } = await client.delete(`/movie/:${id}`, {
+    const { data } = await client.delete(`/movie/delete/${id}`, {
       headers: {
         authorization: "Bearer " + token,
       },

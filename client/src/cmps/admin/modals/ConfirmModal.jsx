@@ -11,7 +11,7 @@ const ConfirmModal = ({
   title,
   subtitle,
   onConfirm,
-  onCancel,
+  onClose
 }) => {
     const commonClass = "px-3 py-1 text-white rounded";
 
@@ -37,7 +37,7 @@ const ConfirmModal = ({
                 Confirm
               </Btn>
               <Btn
-                onClick={onCancel}
+                onClick={onClose}
                 type="button"
                 className={commonClass + " bg-blue-400"}
               >
