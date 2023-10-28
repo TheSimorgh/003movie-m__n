@@ -24,7 +24,7 @@ validate_movie,
 validate,update_movie)
 router.delete("/delete/:movieId",isAuth, isAdmin,delete_movie)
 router.get("/movies",isAuth, isAdmin,get_movies)
-router.get("/for-update/:movieId",get_movie_for_update)
+router.get("/for-update/:id",isAuth, isAdmin,get_movie_for_update)
 router.get("/search",search_movies)
 
 

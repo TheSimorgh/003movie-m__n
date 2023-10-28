@@ -210,7 +210,7 @@ exports.update_movie = async (req, res) => {
         return sendError(res, "Invalid writer id!");
     }
 
-    movie.writers = writers ? writers:movie.writers;
+    movie.writers = writers ? writers : movie.writers;
   }
   // update poster
   if (file) {
@@ -338,41 +338,58 @@ exports.all_movies = async (req, res) => {
   res.json({ movies: results });
 };
 exports.get_movie_for_update = async (req, res) => {
- const {movieId}=req.params;
- if(!isValidObjectId(movieId)) return sendError(res,"ID is invalid")
+  const { id } = req.params;
+  console.log("ID");
+  console.log(id);
 
- const movie=await Movie.find(movieId).populate("director writers cast.actor")
- res.json({
-  movie:{
-    id:movie._id,
-    title:movie.title,
-    storyLine:movie.storyLine,
-    poster:movie.poster?.url,
-    releseDate:movie.releseDate,
-    status:movie.status,
-    type:movie.type,
-    language:movie.language,
-    genres:movie.genres,
-    tags:movie.tags,
-    director:formatActor(movie.director),
-    writers:movie.writers.map((w)=>formatActor(w)),
-    cast:movie.cast.map(c=>{
-      return {
-        id:c.id,
-        profile:formatActor(c.actor),
-        roleAs: c.roleAs,
+  if (!isValidObjectId(id)) return sendError(res, "Id is invalid!");
+
+  const movie = await Movie.findById(id).populate(
+    "director writers cast.actor"
+  );
+  console.log(movie);
+  res.json({
+    result: {
+      id: movie._id,
+      title: movie.title,
+      storyLine: movie.storyLine,
+      poster: movie.poster?.url,
+      releseDate: movie.releseDate,
+      status: movie.status,
+      type: movie.type,
+      language: movie.language,
+      genres: movie.genres,
+      tags: movie?.tags,
+      director: formatActor(movie?.director),
+      writers: movie?.writers.map((w) => formatActor(w)),
+      cast: movie?.cast.map((c) => {
+        return {
+          id: c.id,
+          profile: formatActor(c?.actor),
+          roleAs: c.roleAs,
           leadActor: c.leadActor,
-      }
-    })
-  }
- })
-
-
+        };
+      }),
+    },
+  });
 };
 exports.search_movies = async (req, res) => {
   console.log(req.body);
+  const { title } = req.query;
+  if (!title.trim()) return sendError(req, "Invalid request (title)");
+  const movies = await Movie.find({ title: { $regex: title, $options: "i" } });
+
   res.json({
-    message: 1,
+    results: movies.map((m) => {
+      return {
+        id: m._id,
+        title: m.title,
+        poster: m.poster?.url,
+        genres: m.genres,
+        status: m.status,
+      };
+    }),
+    raw_data: movie,
   });
 };
 exports.get_latest_uploads = async (req, res) => {
@@ -417,7 +434,6 @@ exports.search_movie = async (req, res) => {
   // const movies = result.map((actor) => formatActor(actor));
   res.json({ results: result });
 };
-
 
 exports.test = async (req, res) => {
   console.log(req.body);
