@@ -3,6 +3,9 @@ import { AiOutlineHome } from "react-icons/ai";
 import { BiMoviePlay } from "react-icons/bi";
 import { FaUserNinja } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { AiOutlineSearch } from "react-icons/ai";
+
+
 import { useAuth } from "../../hooks";
 import Logo from "../global/Logo";
 
@@ -36,6 +39,12 @@ const NavbarAdm = () => {
             <NavItem to="/actors">
               <FaUserNinja />
               <span>Actors</span>
+            </NavItem>
+          </li>
+          <li>
+            <NavItem to="/search">
+              <AiOutlineSearch />
+              <span>Search</span>
             </NavItem>
           </li>
         </ul>

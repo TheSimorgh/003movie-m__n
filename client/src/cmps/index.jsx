@@ -24,6 +24,9 @@ export {default as LatestUploads} from"./admin/cmps/LatestUploads"
 export {default as MostRatedMovies} from"./admin/cmps/MostRatedMovies"
 export {default as ActorsCmp} from"./admin/ActorsCmp"
 export {default as MoviesCmp} from"./admin/MoviesCmp"
+export {default as SearchMoviesAdmCmp} from"./admin/SearchMoviesAdmCmp"
+
+
 
 
 export {default as ActorCreateModal} from"./admin/modals/ActorCreateModal"

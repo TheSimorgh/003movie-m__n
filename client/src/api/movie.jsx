@@ -113,11 +113,27 @@ export const get_all_movies = async (pageNo, limit) => {
     return catchError(error);
   }
 };
-
-export const search_movie = async (query) => {
+//Admin Search
+export const search_for_admin = async (text) => {
   const token = getToken();
   try {
-    const { data } = await client(`/movie/search_movie?title=${query}`, {
+    const {data}=await client(`/movie/search?title=${text}`,{
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    })
+    return data;
+  } catch (error) {
+    console.log(error);
+    return catchError(error);
+
+  }
+};
+//Public Search
+export const search_movie = async (text) => {
+  const token = getToken();
+  try {
+    const { data } = await client(`/movie/search_movie?title=${text}`, {
       headers: {
         authorization: "Bearer " + token,
       },
@@ -127,6 +143,7 @@ export const search_movie = async (query) => {
     return catchError(error);
   }
 };
+
 export const xx = async () => {
   try {
     1;

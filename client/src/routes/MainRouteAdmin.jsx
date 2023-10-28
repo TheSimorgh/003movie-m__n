@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Routes, Route } from "react-router-dom";
+import { Routes,HashRouter, Route } from "react-router-dom";
 import routes, { admin_routes } from "./routes";
 import {  MainLayoutAdmin } from "../cmps";
 

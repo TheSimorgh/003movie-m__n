@@ -1,9 +1,7 @@
 
 const SearchMovies = () => {
   return (
-    <div>
-      SearchMovies
-    </div>
+    <div>SearchMovies</div>
   )
 }
 
