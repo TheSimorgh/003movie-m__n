@@ -35,7 +35,7 @@ router.get("/single/:movieId",get_single_movie)
 router.get("/related/:movieId",get_related_movies)
 router.get("/top_rated",get_top_rated_movies)
 router.get("/search_public",search_public_movies)
-router.get("/search_movie",search_movie)
+router.get("/search_movie",search_movies)
 router.get("/all",all_movies)
 
 

@@ -22,8 +22,8 @@ let currentPageNo = 0;
 const MoviesCmp = () => {
   const [busy, setBusy] = useState(false);
   // const [selectedMovie, setSelectedMovie] = useState(null);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  // const [showUpdateModal, setShowUpdateModal] = useState(false);
+  // const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { updateNotification } = useNotification();
 
   const {
@@ -55,53 +55,56 @@ const MoviesCmp = () => {
     //   hideConfirmModal,
   } = useMovies();
 
-  const displayUpdateModal = () => setShowUpdateModal(true);
-  const displayConfirmModal = () => setShowConfirmModal(true);
-  const hideUpdateModal = () => setShowUpdateModal(false);
-  const hideConfirmModal = () => setShowConfirmModal(false);
+  // const displayUpdateModal = () => setShowUpdateModal(true);
+  // const displayConfirmModal = () => setShowConfirmModal(true);
+  // const hideUpdateModal = () => setShowUpdateModal(false);
+  // const hideConfirmModal = () => setShowConfirmModal(false);
 
-  const handleOnEditClick = async (movie) => {
-    const { result, error } = await get_movie_for_update(movie.id);
-    if (error) updateNotification("error", error);
-    setSelectedMovie(result);
-    displayUpdateModal();
-    // setBusy(prev=>!prev)
-    // console.log("Info");
-    // console.log(info);
+  // const handleOnEditClick = async (movie) => {
+  //   const { result, error } = await get_movie_for_update(movie.id);
+  //   if (error) updateNotification("error", error);
+  //   setSelectedMovie(result);
+  //   displayUpdateModal();
+  //   // setBusy(prev=>!prev)
+  //   // console.log("Info");
+  //   // console.log(info);
 
-    // setInfo(prev=>!prev)
-    // console.log("Info");
-    // console.log(info);
-  };
+  //   // setInfo(prev=>!prev)
+  //   // console.log("Info");
+  //   // console.log(info);
+  // };
 
-  const handleOnDeleteConfirm = async () => {
-    setBusy(true);
+  // const handleOnDeleteConfirm = async () => {
+  //   setBusy(true);
 
-    const { error, message,del_movie } = await delete_movie(selectedMovie.id);
+  //   const { error, message,del_movie } = await delete_movie(selectedMovie.id);
 
-    setBusy(false);
-    if (error) return updateNotification("error", error);
-    updateNotification("success", `${message}`) ;
-    hideConfirmModal();
-    fetch_movies(currentPageNo);
-  };
-  const handleOnDeleteClick = (movie) => {
-    console.log(movie);
-    setSelectedMovie(movie);
-    displayConfirmModal();
-    console.log(showConfirmModal);
-  };
-  // console.log(selectedMovie);
+  //   setBusy(false);
+  //   if (error) return updateNotification("error", error);
+  //   updateNotification("success", `${message}`) ;
+  //   hideConfirmModal();
+  //   fetch_movies(currentPageNo);
+  // };
+  // const handleOnDeleteClick = (movie) => {
+  //   console.log(movie);
+  //   setSelectedMovie(movie);
+  //   displayConfirmModal();
+  //   console.log(showConfirmModal);
+  // };
+  // // console.log(selectedMovie);
 
-  const handleOnUpdate = (movie) => {
-    const updatedMovies = movies.map((m) => {
-      if (m.id === movie.id) return movie;
-      return m;
-    });
+  // const handleOnUpdate = (movie) => {
+  //   const updatedMovies = movies.map((m) => {
+  //     if (m.id === movie.id) return movie;
+  //     return m;
+  //   });
 
-    setMovies([...updatedMovies]);
-  };
+  //   setMovies([...updatedMovies]);
+  // };
 
+  const handleUIUpdate=()=>{
+    fetch_movies()
+  }
   useEffect(() => {
     fetch_movies(currentPageNo);
   }, []);
@@ -125,23 +128,27 @@ const MoviesCmp = () => {
         <div>
           {searchResults?.length || resultNotFound
             ? searchResults.map((movie) => (
-                <MovieListItem
-                  key={movie.id}
-                  movie={movie}
-                  onDeleteClick={() => handleOnDeleteClick(movie)}
-                  onEditClick={() => handleOnEditClick(movie)}
-                  initialState={selectedMovie}
-                  visibleUpdateModal={showUpdateModal}
-                />
+              <MovieListItem
+              key={movie.id}
+              movie={movie}
+              afterDelete={handleUIUpdate}
+              afterUpdate={handleUIUpdate}
+              // initialState={selectedMovie}
+              // onDeleteClick={() => handleOnDeleteClick(movie)}
+              // onEditClick={() => handleOnEditClick(movie)}
+              // visibleUpdateModal={showUpdateModal}
+            />
               ))
             : movies.map((movie) => (
                 <MovieListItem
                   key={movie.id}
                   movie={movie}
-                  onDeleteClick={() => handleOnDeleteClick(movie)}
-                  onEditClick={() => handleOnEditClick(movie)}
-                  initialState={selectedMovie}
-                  visibleUpdateModal={showUpdateModal}
+                  afterDelete={handleUIUpdate}
+                  afterUpdate={handleUIUpdate}
+                  // initialState={selectedMovie}
+                  // onDeleteClick={() => handleOnDeleteClick(movie)}
+                  // onEditClick={() => handleOnEditClick(movie)}
+                  // visibleUpdateModal={showUpdateModal}
                 />
               ))}
         </div>
@@ -154,7 +161,7 @@ const MoviesCmp = () => {
           />
         ) : null}
       </div>
-      <div className="p-0">
+      {/* <div className="p-0">
         <UpdateMovie
           visible={showUpdateModal}
           //initialState={selectedMovie} if i sending the initial state  inside the child element is it is null or undefined to prevent tis i am calling selected movie inside the child cmp
@@ -171,7 +178,7 @@ const MoviesCmp = () => {
           title="Are you sure?"
           subtitle="This action will remove this movie permanently!"
         />
-      </div>
+      </div> */}
     </>
   );
 };

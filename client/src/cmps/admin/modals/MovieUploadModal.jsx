@@ -6,18 +6,19 @@ import { FileUploader } from "react-drag-drop-files";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
 import ModalContainer from "../../global/ModalContainer";
-import { useNotification, useSearch } from "../../../hooks";
+import { useMovies, useNotification, useSearch } from "../../../hooks";
 import { upload_movie, upload_trailer } from "../../../api/movie";
 import MovieForm from "../MovieForm";
+import { useNavigate } from "react-router-dom";
 const MovieUploadModal = ({ visible, onClose }) => {
   const [videoSelected, setVideoSelected] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [videoInfo, setVideoInfo] = useState({});
   const [uploadProgress, setUploadProgress] = useState(0);
   const [busy, setBusy] = useState(false);
-
+  const {fetch_movies}=useMovies()
   const { updateNotification } = useNotification();
-
+  const navigation=useNavigate()
   const resetState = () => {
     setVideoSelected(false);
     setVideoUploaded(false);
@@ -62,7 +63,9 @@ const MovieUploadModal = ({ visible, onClose }) => {
     setBusy(false);
     if (error) return updateNotification("error", error);
     updateNotification("success", "Movie upload successfully");
+    fetch_movies()
     resetState();
+    navigation("/")
     onClose();
   };
   return (

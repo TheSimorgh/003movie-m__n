@@ -423,17 +423,17 @@ exports.search_public_movies = async (req, res) => {
   });
 };
 
-exports.search_movie = async (req, res) => {
-  const { title } = req.query;
+// exports.search_movie = async (req, res) => {
+//   const { title } = req.query;
 
-  if (!title.trim()) return sendError(res, "Invalid request!");
-  const result = await Movie.find({
-    name: { $regex: title, $options: "i" },
-  });
+//   if (!title.trim()) return sendError(res, "Invalid request!");
+//   const result = await Movie.find({
+//     name: { $regex: title, $options: "i" },
+//   });
 
-  // const movies = result.map((actor) => formatActor(actor));
-  res.json({ results: result });
-};
+//   // const movies = result.map((actor) => formatActor(actor));
+//   res.json({ results: result });
+// };
 
 exports.test = async (req, res) => {
   console.log(req.body);

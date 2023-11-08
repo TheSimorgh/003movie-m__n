@@ -11,7 +11,7 @@ const ConfirmModal = ({
   title,
   subtitle,
   onConfirm,
-  onClose
+  onCancel,
 }) => {
     const commonClass = "px-3 py-1 text-white rounded";
 
@@ -29,20 +29,20 @@ const ConfirmModal = ({
             </p>
           ) : (
             <>
-              <Btn
+              <button
                 onClick={onConfirm}
                 type="button"
                 className={commonClass + " bg-red-400"}
               >
                 Confirm
-              </Btn>
-              <Btn
-                onClick={onClose}
+              </button>
+              <button
+                onClick={()=>onCancel()}
                 type="button"
                 className={commonClass + " bg-blue-400"}
               >
                 Cancel
-              </Btn>
+              </button>
             </>
           )}
         </div>

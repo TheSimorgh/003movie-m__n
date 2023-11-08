@@ -26,12 +26,24 @@ const SearchMoviesAdm = () => {
   useEffect(() => {
     if (query.trim()) fetch_movie(query);
   }, [query]);
+
+  const handleAfterDelete=(movie)=>{
+    const updatedMovies=movies.filter((m)=>m.id !==movie.id)
+    setMovies([...updatedMovies])
+  }
+  const handleAfterUpdate=(movie)=>{
+    const updatedMovies=movies.map((m)=>{
+      if(m.id===movie.id) return movie;
+      return m
+    })
+    setMovies([...updatedMovies])
+  }
   return (
     <div className="p-5 space-y-3">
       <NotFoundText visible={resultNotFound} text="Record not found!" /> 
        {!resultNotFound
         ? movies.map((movie) => {
-            return <MovieListItem movie={movie} key={movie.id} />;
+            return <MovieListItem movie={movie} key={movie.id} afterDelete={handleAfterDelete} afterUpdate={handleAfterUpdate} />;
           })
         : null}
        
