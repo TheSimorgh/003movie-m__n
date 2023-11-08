@@ -24,7 +24,6 @@ exports.sendError = (res, error, statusCode = 401) =>
 
 
 
-
   exports.uploadImageToCloud = async (file) => {
     const { secure_url: url, public_id } = await cloudinary.uploader.upload(
       file,
@@ -56,3 +55,9 @@ exports.sendError = (res, error, statusCode = 401) =>
   
     next();
   };
+
+
+
+  exports.getAverageRatings=async(movieId)=>{
+ 
+  }
