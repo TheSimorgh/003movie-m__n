@@ -58,6 +58,30 @@ exports.sendError = (res, error, statusCode = 401) =>
 
 
 
-  exports.getAverageRatings=async(movieId)=>{
- 
-  }
+  exports.averageRatingPipeline = (movieId) => {
+    return [
+      {
+        $lookup: {
+          from: "Review",
+          localField: "rating",
+          foreignField: "_id",
+          as: "avgRat",
+        },
+      },
+      {
+        $match: { parentMovie: movieId },
+      },
+      {
+        $group: {
+          _id: null,
+          ratingAvg: {
+            $avg: "$rating",
+          },
+          reviewCount: {
+            $sum: 1,
+          },
+        },
+      },
+    ];
+  };
+  

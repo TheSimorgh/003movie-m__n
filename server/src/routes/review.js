@@ -6,7 +6,7 @@ router.get("/",(req,res)=>{console.log("1");} );
 
 
 
-router.post("/:movieId",isAuth,create_review)
+router.post("/add/:movieId",isAuth,create_review)
 router.patch("/:reviewId",isAuth,update_review)
 router.delete("/:reviewId",isAuth,delete_review)
 router.get("/get-reviews-by-movie/:movieId",isAuth,get_review_by_movies)

@@ -2,7 +2,7 @@ const { isValidObjectId } = require("mongoose");
 const Movie = require("../models/movie");
 const Review = require("../models/review");
 const cloud = require("../config/cloud");
-const { sendError, formatActor } = require("../utils/helpers");
+const { sendError, formatActor, averageRatingPipeline } = require("../utils/helpers");
 const movie = require("../models/movie");
 
 exports.upload_trailer = async (req, res) => {
@@ -393,17 +393,94 @@ exports.search_movies = async (req, res) => {
   });
 };
 exports.get_latest_uploads = async (req, res) => {
-  console.log(req.body);
-  res.json({
-    message: 1,
+  const { limit = 5 } = req.query;
+  const results = await Movie.find({ status: "public" })
+    .sort("-createdAt")
+    .limit(parseInt(limit));
+
+  const movies = results.map((m) => {
+    return {
+      id: m._id,
+      title: m.title,
+      storyLine: m.storyLine,
+      poster: m.poster?.url,
+      responsivePosters: m.poster.responsive,
+      trailer: m.trailer?.url,
+    };
   });
+  res.json({ movies });
 };
 exports.get_single_movie = async (req, res) => {
-  console.log(req.body);
+  const { movieId } = req.params;
+
+  if (!isValidObjectId(movieId))
+    return sendError(res, "Movie id is not valid!");
+  const movie = await Movie.findById(movieId).populate(
+    "director writers cast.actor"
+  );
+
+  const [aggregatedResponse] = await Review.aggregate(
+    averageRatingPipeline(movie._id)
+  );
+
+  const reviews = {};
+
+  if (aggregatedResponse) {
+    const { ratingAvg, reviewCount } = aggregatedResponse;
+    reviews.ratingAvg = parseFloat(ratingAvg).toFixed(1);
+    reviews.reviewCount = reviewCount;
+  }
+  const {
+    _id: id,
+    title,
+    storyLine,
+    cast,
+    writers,
+    director,
+    releseDate,
+    genres,
+    tags,
+    language,
+    poster,
+    trailer,
+    type,
+  } = movie;
+
   res.json({
-    message: 1,
+    movie: {
+      id,
+      title,
+      storyLine,
+      releseDate,
+      genres,
+      tags,
+      language,
+      type,
+      poster: poster?.url,
+      trailer: trailer?.url,
+      cast: cast.map((c) => ({
+        id: c._id,
+        profile: {
+          id: c.actor._id,
+          name: c.actor.name,
+          avatar: c.actor?.avatar?.url,
+        },
+        leadActor: c.leadActor,
+        roleAs: c.roleAs,
+      })),
+      writers: writers.map((w) => ({
+        id: w._id,
+        name: w.name,
+      })),
+      director: {
+        id: director._id,
+        name: director.name,
+      },
+      reviews: { ...reviews },
+    },
   });
 };
+
 exports.get_related_movies = async (req, res) => {
   console.log(req.body);
   res.json({
