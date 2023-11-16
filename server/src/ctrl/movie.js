@@ -2,7 +2,12 @@ const { isValidObjectId } = require("mongoose");
 const Movie = require("../models/movie");
 const Review = require("../models/review");
 const cloud = require("../config/cloud");
-const { sendError, formatActor, averageRatingPipeline } = require("../utils/helpers");
+const {
+  sendError,
+  formatActor,
+  averageRatingPipeline,
+  relatedMovieAggregation,
+} = require("../utils/helpers");
 const movie = require("../models/movie");
 
 exports.upload_trailer = async (req, res) => {
@@ -412,7 +417,7 @@ exports.get_latest_uploads = async (req, res) => {
 };
 exports.get_single_movie = async (req, res) => {
   const { movieId } = req.params;
-
+  // mongoose.Types.ObjectId(movieId)
   if (!isValidObjectId(movieId))
     return sendError(res, "Movie id is not valid!");
   const movie = await Movie.findById(movieId).populate(
@@ -482,17 +487,35 @@ exports.get_single_movie = async (req, res) => {
 };
 
 exports.get_related_movies = async (req, res) => {
-  console.log(req.body);
-  res.json({
-    message: 1,
-  });
+  const { movieId } = req.params;
+  if (!isValidObjectId(movieId)) return sendError(res, "Invalid movie id!");
+  const movie = await Movie.findById(movieId);
 };
 exports.get_top_rated_movies = async (req, res) => {
-  console.log(req.body);
-  res.json({
-    message: 1,
-  });
+  const { movieId } = req.params;
+  if (!isValidObjectId(movieId));
+
+  const movie = await Movie.findById(movieId);
+  const movies = await Movie.aggregate(
+    relatedMovieAggregation(movie.tags, movie._id)
+  );
+
+  const mapMovies = async (m) => {
+    const reviews = await getAverageRatings(m._id);
+
+    return {
+      id: m._id,
+      title: m.title,
+      poster: m.poster,
+      responsivePosters: m.responsivePosters,
+      reviews: { ...reviews },
+    };
+  };
+  const relatedMovies = await Promise.all(movies.map(mapMovies));
+
+  res.json({ movies: relatedMovies });
 };
+
 exports.search_public_movies = async (req, res) => {
   console.log(req.body);
   res.json({

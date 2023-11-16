@@ -85,3 +85,48 @@ exports.sendError = (res, error, statusCode = 401) =>
     ];
   };
   
+
+
+  exports.relatedMovieAggregation = (movieId) => {
+
+    return [
+      {
+        $lookup: {
+          from: "Movie",
+          localField: "tags",
+          foreignField: "_id",
+          as: "relatedMovies",
+        },
+      },
+      {
+        $match: {
+          tags: { $in: [...tags] },
+          _id: { $ne: movieId },
+        },
+      },
+      {
+        $project: {
+          title: 1,
+          poster: "$poster.url",
+          responsivePosters: "$poster.responsive",
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ];
+  }
+
+  exports.getAverageRatings=async(movieId)=>{
+    const [aggregatedResponse] = await Review.aggregate(
+      this.averageRatingPipeline(movieId)
+    );
+    const reviews = {};
+    if (aggregatedResponse) {
+      const { ratingAvg, reviewCount } = aggregatedResponse;
+      reviews.ratingAvg = parseFloat(ratingAvg).toFixed(1);
+      reviews.reviewCount = reviewCount;
+    }
+  
+    return reviews;
+  }
