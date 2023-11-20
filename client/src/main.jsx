@@ -8,7 +8,7 @@ import AllContextProvider from "./context/index.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   
   <HashRouter future={{ v7_startTransition: true }}>
-  {/* <BrowserRouter> */}
+ {/* <BrowserRouter>  */}
   <AllContextProvider>
 
 
@@ -19,6 +19,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
   </AllContextProvider>
 
-  {/* </BrowserRouter> */}
+   {/* </BrowserRouter>  */}
   </HashRouter>
 );

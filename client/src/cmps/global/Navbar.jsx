@@ -22,7 +22,7 @@ const navigate = useNavigate();
   console.log(authInfo,isLoggedIn);
 };
   return (
-    <div className="bg-secondary shadow-sm shadow-gray-500 fixed w-full">
+    <div className="bg-secondary shadow-sm shadow-gray-500 fixed w-full z-10">
       <Container className="p-2">
       <div className="flex justify-between items-center">
           <Link

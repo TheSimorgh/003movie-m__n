@@ -5,7 +5,9 @@ export {default as  ModalContainer } from "./global/ModalContainer";
 export {default as  Selector } from "./global/Selector";
 export {default as Navbar} from "./global/Navbar";
 export {default as NextAndPrevBtn} from "./global/NextAndPrevBtn";
-
+export {default as ListItem} from "./global/ListItem";
+export {default as MovieList} from "./global/MovieList";
+export {default as GridContainer} from "./global/GridContainer";
 
 
 export {default as Header} from "./admin/Header";
@@ -60,7 +62,10 @@ export {default as ViewAll_Btn} from "./global/ViewAll_Btn";
 export {default as Btn} from "./global/Btn";
 export {default as NotFoundText} from "./global/NotFoundText";
 
-
+export {default as HeroSlideshow} from "./global/home/HeroSlideshow";
+export {default as TopRatedMovies} from "./global/home/TopRatedMovies";
+export {default as TopRatedTVSeries} from "./global/home/TopRatedTVSeries";
+export {default as TopRatedWebSeries} from "./global/home/TopRatedWebSeries";
 
 export {default as CastModal} from "./modals/CastModal";
 export {default as GenresModal} from "./modals/GenresModal";

@@ -13,6 +13,16 @@ export const isValidEmail = (email) => {
     return { error: error.message || error };
   };
 
+
+
+  export const renderItem = (result) => {
+    return (
+      <div className="flex rounded overflow-hidden">
+        <img src={result.avatar} alt="" className="w-16 h-16 object-cover" />
+        <p className="dark:text-white font-semibold">{result.name}</p>
+      </div>
+    );
+  };
   export const getPoster = (posters = []) => {
     const { length } = posters;
   
@@ -26,11 +36,10 @@ export const isValidEmail = (email) => {
   };
   
 
-  export const renderItem = (result) => {
-    return (
-      <div className="flex rounded overflow-hidden">
-        <img src={result.avatar} alt="" className="w-16 h-16 object-cover" />
-        <p className="dark:text-white font-semibold">{result.name}</p>
-      </div>
-    );
+
+  export const convertReviewCount = (count = 0) => {
+    if (count <= 999) return count;
+  
+    return parseFloat(count / 1000).toFixed(2) + "k";
   };
+  
