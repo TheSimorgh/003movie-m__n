@@ -66,7 +66,7 @@ const LatestUploads = () => {
   // const hideUpdateModal = () => setShowUpdateModal(false);
 
 
-
+  const handleUIUpdate = () => fetch_latest_movies();
   useEffect(() => {
     fetch_latest_movies();
   }, []);
@@ -80,7 +80,10 @@ const LatestUploads = () => {
 
         <div className="space-y-3">
             {latestUploads.map((e,i)=>(
-                <MovieListItem key={i} movie={e} />
+                <MovieListItem key={i} movie={e}
+                
+                      afterDelete={handleUIUpdate}
+                afterUpdate={handleUIUpdate}/>
             ))}
         </div>
     </div>

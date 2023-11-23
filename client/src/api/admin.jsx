@@ -16,7 +16,6 @@ export const get_app_info = async () => {
   }
 };
 
-
 export const get_most_rated_movies = async () => {
     try {
       const token = getToken();
