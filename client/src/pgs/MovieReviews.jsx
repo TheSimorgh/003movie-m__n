@@ -22,19 +22,18 @@ const getNameInitial = (name = "") => {
 
 const MovieReviews = () => {
   const [reviews, setReviews] = useState([]);
-  const [profileOwnersReview, setProfileOwnersReview] = useState([]);
   const [movieTitle, setMovieTitle] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [profileOwnersReview, setProfileOwnersReview] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-  
+  const [busy, setBusy] = useState(false);
+
   const { movieId } = useParams();
   const { authInfo } = useAuth();
   const profileId = authInfo.profile?.id;
 
   const { updateNotification } = useNotification();
-
   const get_reviews = async () => {
     const { movie, error } = await get_review_by_movie(movieId);
     if (error) return updateNotification("error", error);
@@ -67,12 +66,37 @@ const MovieReviews = () => {
     hideConfirmModal();
   };
 
+  const handleOnEditClick = () => {
+    const { id, content, rating } = profileOwnersReview;
+    setSelectedReview({
+      id,
+      content,
+      rating,
+    });
+    displayEditModal()
+      };
+    const handleOnReviewUpdate=(review)=>{
+      const updateReview={
+        ...profileOwnersReview,
+        rating:review.rating,
+        content:review.content
+      }
+      setProfileOwnersReview({...updateReview})
+      const newReviews=reviews.map(r=>{
+        if(r.id===updateReview.id) return updateReview;
+        return r
+      })
+      setReviews([...newReviews])
+    }
+
   const displayConfirmModal = () => setShowConfirmModal(true);
   const hideConfirmModal = () => setShowConfirmModal(false);
   const displayEditModal = () => setShowEditModal(true);
-  const hideShowEditModal = () => setShowEditModal(false);
+  const hideEditModal = () => {
+    setShowEditModal(false);
+    setSelectedReview(null);
+  };
 
-  const handleOnEditClick = () => {};
 
   useEffect(() => {
     if (movieId) get_reviews();
@@ -92,7 +116,7 @@ const MovieReviews = () => {
               label={profileOwnersReview ? "View All" : "Find My Review"}
               onClick={findProfileOwnersReview}
             />
-          ) : null}{" "}
+          ) : null}
         </div>
         <NotFoundText text="No Reviews!" visible={!reviews.length} />
         {profileOwnersReview ? (
@@ -126,7 +150,8 @@ const MovieReviews = () => {
       <EditRatingModal
         initialState={selectedReview}
         visible={showEditModal}
-        onClose={displayEditModal}
+        onClose={hideEditModal}
+        onSuccess={handleOnReviewUpdate}
       />
     </div>
   );
