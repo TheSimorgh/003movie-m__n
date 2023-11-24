@@ -28,7 +28,7 @@ const HeroSlideshow = () => {
     setSlides([...movies]);
     setCurrentSlide(movies[0]);
   };
-  console.log(currentSlide);
+  // console.log(currentSlide);
 
   const startSlideShow = () => {
     intervalId = setInterval(() => {

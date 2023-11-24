@@ -28,6 +28,7 @@ const SingleMovie = () => {
 
     setMovie(movie);
   };
+  console.log(movie);
   const handleOnRateMovie = () => {
     if (!isLoggedIn) return navigate("/auth/signin");
     setShowRatingModal(true);
@@ -47,9 +48,10 @@ const SingleMovie = () => {
   //     </p>
   //   </div>
   // );
-  console.log("ready");
+  // console.log("ready");
 
-  console.log(ready);
+  // console.log(ready);
+
   const {
     id,
     trailer,
@@ -64,13 +66,13 @@ const SingleMovie = () => {
     writers = [],
     cast = [],
     genres = [],
+    tags=[],
   } = movie;
-
-
-  const handleProfileClick = (profile) => {
+  
+  const handleProfileClick=(profile)=>{
     setSelectedProfile(profile);
     setShowProfileModal(true);
-  };
+  }
 
   const hideRatingModal=()=>setShowRatingModal(false)
   const displayRatingModal=()=>setShowRatingModal(true)
@@ -78,6 +80,7 @@ const SingleMovie = () => {
 
   const hideProfileModal=()=>setShowProfileModal(false)
   const displayProfileModal=()=>setShowProfileModal(true)
+
 
   return (
     <div className="dark:bg-primary bg-white min-h-screen pb-10">
@@ -119,6 +122,15 @@ const SingleMovie = () => {
             ))}
           </ListWithLabel>
 
+          <ListWithLabel label="Tags:">
+            {tags.map((w) => (
+              <CustomBtnLink
+                // onClick={() => handleProfileClick(w)}
+                key={w}
+                label={w}
+              />
+            ))}
+          </ListWithLabel>
           <ListWithLabel label="Cast:">
             {cast.map(({ id, profile, leadActor }) => {
               return leadActor ? (
@@ -130,6 +142,7 @@ const SingleMovie = () => {
               ) : null;
             })}
           </ListWithLabel>
+
 
           <ListWithLabel label="Language:">
             <CustomBtnLink label={language} clickable={false} />

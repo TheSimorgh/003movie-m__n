@@ -9,13 +9,15 @@ const ProfileModal = ({ visible, profileId, onClose }) => {
   const { updateNotification } = useNotification();
 
   const fetchActorProfile = async () => {
-    const { error, actor } = await get_actor_profile(profile);
+    const { error, actor } = await get_actor_profile(profileId);
     if (error) return updateNotification("error", error);
     setProfile(actor);
   };
   useEffect(() => {
     if (profileId) fetchActorProfile();
   }, [profileId]);
+  const { avatar, name, about } = profile;
+  console.log(profile);
   return (
     <ModalContainer visible={visible} onClose={onClose} ignoreContainer>
       <div className="w-72 p-5 rounded flex flex-col items-center bg-white dark:bg-primary space-y-3">
