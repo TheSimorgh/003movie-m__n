@@ -19,7 +19,7 @@ const navigate = useNavigate();
 //   setIsLoggedIn(prev=>!prev)
 //  }
  const handleSearchSubmit = () => {
-  console.log(authInfo,isLoggedIn);
+  // console.log(authInfo,isLoggedIn);
 };
   return (
     <div className="bg-secondary shadow-sm shadow-gray-500 fixed w-full z-10">

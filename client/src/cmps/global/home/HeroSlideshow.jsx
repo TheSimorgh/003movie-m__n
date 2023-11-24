@@ -22,8 +22,8 @@ const HeroSlideshow = () => {
 
   const { updateNotification } = useNotification();
 
-  const fetchLatestUploads = async () => {
-    const { error, movies } = await get_latest_uploads();
+  const fetchLatestUploads = async (signal) => {
+    const { error, movies } = await get_latest_uploads(signal);
     if (error) return updateNotification(error);
     setSlides([...movies]);
     setCurrentSlide(movies[0]);
@@ -31,7 +31,12 @@ const HeroSlideshow = () => {
   console.log(currentSlide);
 
   const startSlideShow = () => {
-    //  intervalId= setInterval(handleOnNextClick, 3000);
+    intervalId = setInterval(() => {
+      newTime = Date.now();
+      const delta = newTime - lastTime;
+      if (delta < 4000) return clearInterval(intervalId);
+      handleOnNextClick();
+    }, 3500);
   };
 
   const pauseSlideShow = () => {
@@ -100,7 +105,8 @@ const HeroSlideshow = () => {
   };
 
   useEffect(() => {
-    fetchLatestUploads();
+    const ac = new AbortController();
+    fetchLatestUploads(ac.signal);
     document.addEventListener("visibilitychange", handleOnVisibilityChange);
     return () => {
       pauseSlideShow();
@@ -108,6 +114,7 @@ const HeroSlideshow = () => {
         "visibilitychange",
         handleOnVisibilityChange
       );
+      ac.abort();
     };
   }, []);
   useEffect(() => {

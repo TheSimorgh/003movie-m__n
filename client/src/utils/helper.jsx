@@ -43,3 +43,6 @@ export const isValidEmail = (email) => {
     return parseFloat(count / 1000).toFixed(2) + "k";
   };
   
+  export const convertDate = (date = "") => {
+    return date.split("T")[0];
+  };

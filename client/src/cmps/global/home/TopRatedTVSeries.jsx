@@ -14,11 +14,15 @@ const TopRatedTVSeries = () => {
     setMovies([...movies])
   }
   useEffect(()=>{
-    fetch_movies()
-    console.log(movies);
+    const ac = new AbortController();
+    fetch_movies(ac.signal)
+    return () => {
+      ac.abort();
+    };
+    // console.log(movies);
   },[])
-  console.log("movies");
-  console.log(movies);
+  // console.log("movies");
+  // console.log(movies);
   return <MovieList  movies={movies} title="Viewers choice (TV Series)"  />
 
 

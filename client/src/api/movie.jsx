@@ -146,11 +146,11 @@ export const search_movie = async (text) => {
 };
 
 
-export const get_top_rated_movies = async (type) => {
+export const get_top_rated_movies = async (type,signal) => {
   try {
     let endpoint="/movie/top-rated";
     if(type) endpoint=endpoint+"?type" + type;
-    const {data}=await client(endpoint)
+    const {data}=await client(endpoint,{signal})
     return data
   } catch (error) {
     console.log(error);

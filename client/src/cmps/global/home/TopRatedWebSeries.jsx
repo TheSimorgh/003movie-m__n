@@ -12,7 +12,12 @@ const TopRatedWebSeries = () => {
     setMovies([...movies])
   }
   useEffect(()=>{
-    fetch_movies()
+   
+    const ac = new AbortController();
+    fetch_movies(ac.signal)
+    return () => {
+      ac.abort();
+    };
   },[])
 
   return <MovieList  movies={movies} title="Viewers choice (Web Services)"  />
